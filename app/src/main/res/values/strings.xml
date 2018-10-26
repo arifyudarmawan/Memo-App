@@ -4,6 +4,8 @@
     <string name="email">Email</string>
     <string name="password">password</string>
     <string name="login">Login</string>
-    <string name="sign_up"><u>Sign Up</u></string>
+    <string name="login_underlined"><u>Login</u></string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_up_underlined"><u>Sign Up</u></string>
     <string name="dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra hendrerit massa ut ullamcorper. Suspendisse risus ante, gravida at nibh eget, tempor consectetur mauris. Vivamus placerat efficitur nulla, a euismod massa eleifend ac.</string>
 </resources>
