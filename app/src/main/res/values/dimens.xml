@@ -4,4 +4,6 @@
     <dimen name="layout_padding">10dp</dimen>
     <dimen name="login_title_size">28sp</dimen>
     <dimen name="login_et_margin">24dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="layout_margin">10dp</dimen>
 </resources>
