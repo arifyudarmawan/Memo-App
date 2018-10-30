@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".Activity.MainActivity"
     android:padding="@dimen/layout_padding"
     android:gravity="center">
     <TextView
@@ -25,7 +25,7 @@
 
     <EditText
         android:layout_marginTop="@dimen/login_et_margin"
-        android:id="@+id/et_emai"
+        android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"

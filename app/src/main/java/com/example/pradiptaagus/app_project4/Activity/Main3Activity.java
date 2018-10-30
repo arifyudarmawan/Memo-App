@@ -1,10 +1,12 @@
-package com.example.pradiptaagus.app_project4;
+package com.example.pradiptaagus.app_project4.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.pradiptaagus.app_project4.R;
 
 public class Main3Activity extends AppCompatActivity {
     private TextView login;

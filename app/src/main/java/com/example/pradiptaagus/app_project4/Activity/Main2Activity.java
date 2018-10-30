@@ -1,14 +1,18 @@
-package com.example.pradiptaagus.app_project4;
+package com.example.pradiptaagus.app_project4.Activity;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.pradiptaagus.app_project4.Adapter.MemoAdapter;
+import com.example.pradiptaagus.app_project4.Model.Memo;
+import com.example.pradiptaagus.app_project4.R;
+import com.example.pradiptaagus.app_project4.Util.RecyclerTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
