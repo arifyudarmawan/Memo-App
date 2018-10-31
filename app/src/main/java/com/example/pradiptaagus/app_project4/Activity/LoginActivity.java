@@ -13,19 +13,14 @@ import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
-import com.example.pradiptaagus.app_project4.Model.Memo;
-import com.example.pradiptaagus.app_project4.Model.User;
 import com.example.pradiptaagus.app_project4.Model.UserLogin;
 import com.example.pradiptaagus.app_project4.R;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView signup;
     private EditText etEmail;
@@ -36,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login_main);
 
         // login
         etEmail = (EditText) findViewById(R.id.et_email);
@@ -59,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), ""+response.body().isStatus(),Toast.LENGTH_SHORT).show();
                         if (response.body().isStatus()) {
                             Toast.makeText(getApplicationContext(), "login berhasil", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(), "login gagal", Toast.LENGTH_SHORT).show();
@@ -72,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                // Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                // Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 // startActivity(intent);
             }
         });
@@ -82,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Main3Activity.class);
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });

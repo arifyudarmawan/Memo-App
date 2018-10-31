@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activity.MainActivity"
+    android:gravity="center"
     android:padding="@dimen/layout_padding"
-    android:gravity="center">
+    tools:context=".Activity.SignUpActivity">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,13 +21,13 @@
         android:id="@+id/login_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login"
+        android:text="@string/sign_up"
         android:textSize="@dimen/login_title_size"
         android:gravity="center"/>
 
     <EditText
         android:layout_marginTop="@dimen/login_et_margin"
-        android:id="@+id/et_email"
+        android:id="@+id/et_emai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"
@@ -41,6 +43,15 @@
         android:hint="@string/password"
         android:background="@drawable/edit_text"/>
 
+    <EditText
+        android:layout_marginTop="@dimen/login_et_margin"
+        android:id="@+id/et_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/password"
+        android:background="@drawable/edit_text"/>
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
@@ -48,7 +59,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:background="@drawable/button"
-        android:text="@string/login" />
+        android:text="@string/sign_up" />
 
     <LinearLayout
         android:layout_marginTop="@dimen/login_et_margin"
@@ -59,14 +70,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dont have an account?"/>
+            android:text="Already have an account?"/>
 
         <TextView
-            android:id="@+id/tv_go_to_signup_view"
+            android:id="@+id/tv_go_to_login_view"
             android:layout_marginLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_up_underlined"/>
+            android:text="@string/login_underlined"/>
     </LinearLayout>
 
 </LinearLayout>

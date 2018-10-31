@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,7 +20,7 @@ import com.example.pradiptaagus.app_project4.Util.RecyclerTouchListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main2Activity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
     private List<Memo> memoList = new ArrayList<>();
     private RecyclerView recyclerView;
     private MemoAdapter adapter;
@@ -26,7 +29,11 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.home_main);
+
+        //support action bar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // floating button action
         fab = (FloatingActionButton) findViewById(R.id.fab_add_memo);
@@ -103,5 +110,27 @@ public class Main2Activity extends AppCompatActivity {
         Memo memo10 = new Memo("Memo", "Description memo");
         memoList.add(memo10);
         adapter.notifyDataSetChanged();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.item1:
+                Toast.makeText(getApplicationContext(), "item 1", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.item2:
+                Toast.makeText(getApplicationContext(), "item 2", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.logout_item:
+                Toast.makeText(getApplicationContext(), "logout", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
