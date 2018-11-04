@@ -29,7 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_main);
+        setContentView(R.layout.activity_home);
 
         //support action bar
         Toolbar toolbar = findViewById(R.id.toolbar);

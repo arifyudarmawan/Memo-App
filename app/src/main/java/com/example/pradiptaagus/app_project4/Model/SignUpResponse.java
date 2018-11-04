@@ -1,14 +1,24 @@
 package com.example.pradiptaagus.app_project4.Model;
 
-public class UserLogin {
+public class SignUpResponse {
+    private String name;
     private String email;
     private String password;
     private boolean status;
+    private String message;
 
-    public UserLogin(String email, String password, boolean status) {
+    public SignUpResponse(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
-        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -34,4 +44,13 @@ public class UserLogin {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }

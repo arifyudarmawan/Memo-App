@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
-import com.example.pradiptaagus.app_project4.Model.UserLogin;
+import com.example.pradiptaagus.app_project4.Model.LoginResponse;
 import com.example.pradiptaagus.app_project4.R;
 
 import retrofit2.Call;
@@ -31,44 +32,53 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_main);
+        setContentView(R.layout.activity_login);
 
-        // login
+
         etEmail = (EditText) findViewById(R.id.et_email);
         etPassword = (EditText) findViewById(R.id.et_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb_login);
+        progressBar.setVisibility(View.INVISIBLE);
 
+        // login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 //Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
-                ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-                Call<UserLogin> call = apiInterface.login(email, password);
+                // call login method
+                login(email, password);
+            }
 
-                call.enqueue(new Callback<UserLogin>() {
+            private void login(String email, String password) {
+                ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                Call<LoginResponse> call = apiInterface.login(email, password);
+
+                call.enqueue(new Callback<LoginResponse>() {
                     @Override
-                    public void onResponse(Call<UserLogin> call, Response<UserLogin> response) {
-                        Toast.makeText(getApplicationContext(), ""+response.body().isStatus(),Toast.LENGTH_SHORT).show();
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        //Toast.makeText(getApplicationContext(), ""+response.body().isStatus(),Toast.LENGTH_SHORT).show();
                         if (response.body().isStatus()) {
-                            Toast.makeText(getApplicationContext(), "login berhasil", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(getApplicationContext(), "login gagal", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<UserLogin> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "login gagal koneksi", Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-                // Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                // startActivity(intent);
             }
         });
 
