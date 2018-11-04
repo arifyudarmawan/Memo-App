@@ -1,6 +1,8 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +42,14 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = (Button) findViewById(R.id.btn_login);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb_login);
         progressBar.setVisibility(View.INVISIBLE);
+        final SharedPreferences userPreference = this.getPreferences(Context.MODE_PRIVATE);
+        // get token from shared preference
+        String token = userPreference.getString("token", "missing");
+
+
+        if (token != "missing") {
+            homeActivity();
+        }
 
         // login
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -65,8 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.body().isStatus()) {
                             progressBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);
+
+                            // save token to shared preference
+                            SharedPreferences.Editor editor = userPreference.edit();
+                            editor.putString("token", response.body().getToken());
+                            editor.apply();
+
+                            // go to home activity
+                            homeActivity();
                         } else {
                             progressBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
@@ -82,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+
         // go to sign up view
         signup = (TextView) findViewById(R.id.tv_go_to_signup_view);
         signup.setOnClickListener(new View.OnClickListener() {
@@ -91,5 +109,10 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void homeActivity() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 }
