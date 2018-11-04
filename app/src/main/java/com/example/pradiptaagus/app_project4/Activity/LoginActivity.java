@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = (Button) findViewById(R.id.btn_login);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb_login);
         progressBar.setVisibility(View.INVISIBLE);
-        final SharedPreferences userPreference = this.getPreferences(Context.MODE_PRIVATE);
+        final SharedPreferences userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
         // get token from shared preference
         String token = userPreference.getString("token", "missing");
 
