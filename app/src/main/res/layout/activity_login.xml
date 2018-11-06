@@ -38,7 +38,7 @@
             android:layout_below="@+id/login_title"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:background="@drawable/edit_text"/>
+            android:background="@drawable/edit_text_with_border_radius"/>
 
         <EditText
             android:layout_marginTop="@dimen/login_et_margin"
@@ -48,7 +48,7 @@
             android:layout_below="@+id/et_email"
             android:inputType="textPassword"
             android:hint="@string/password"
-            android:background="@drawable/edit_text"/>
+            android:background="@drawable/edit_text_with_border_radius"/>
 
         <Button
             android:id="@+id/btn_login"
@@ -57,7 +57,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_below="@+id/et_password"
             android:layout_marginTop="24dp"
-            android:background="@drawable/button"
+            android:background="@drawable/button_with_border_radius"
             android:layout_centerHorizontal="true"
             android:text="@string/login" />
 

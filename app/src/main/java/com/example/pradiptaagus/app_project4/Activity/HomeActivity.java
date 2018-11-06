@@ -1,6 +1,7 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -53,7 +54,8 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(HomeActivity.this, AddMemoActivity.class);
+                startActivity(intent);
             }
         });
 
