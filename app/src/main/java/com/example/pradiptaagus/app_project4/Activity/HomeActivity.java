@@ -1,9 +1,11 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -78,11 +80,29 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 MemoItem memo = memoList.get(position);
+                memo.getId();
                 Toast.makeText(getApplicationContext(), memo.getTitle() + " is selected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLongClick(View view, int position) {
+                String[] menu = {"Detail", "Edit", "Delete"};
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this);
+                alertDialog.setTitle("Menu");
+                alertDialog.setItems(menu, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            Toast.makeText(HomeActivity.this, "Detail", Toast.LENGTH_SHORT).show();
+                        } else if (which == 1) {
+                            Toast.makeText(HomeActivity.this, "Edit", Toast.LENGTH_SHORT).show();
+                        } else if (which == 2) {
+                            Toast.makeText(HomeActivity.this, "Delete", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                alertDialog.create().show();
+
                 MemoItem memo = memoList.get(position);
                 Toast.makeText(getApplicationContext(), memo.getDetail(), Toast.LENGTH_SHORT).show();
             }
