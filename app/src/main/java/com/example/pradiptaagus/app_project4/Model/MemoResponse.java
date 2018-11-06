@@ -1,61 +1,51 @@
 package com.example.pradiptaagus.app_project4.Model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class MemoResponse {
-    private int id;
-    private String title;
-    private String detail;
-    private String user_id;
-    private String created_at;
-    private String updated_at;
 
-    // method geter and setter
-    public int getId() {
-        return id;
-    }
+	@SerializedName("data")
+	private List<MemoItem> data;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@SerializedName("message")
+	private String message;
 
-    public String getTitle() {
-        return title;
-    }
+	@SerializedName("status")
+	private boolean status;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setData(List<MemoItem> data){
+		this.data = data;
+	}
 
-    public String getDetail() {
-        return detail;
-    }
+	public List<MemoItem> getData(){
+		return data;
+	}
 
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
+	public void setMessage(String message){
+		this.message = message;
+	}
 
-    public String getUser_id() {
-        return user_id;
-    }
+	public String getMessage(){
+		return message;
+	}
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
+	public void setStatus(boolean status){
+		this.status = status;
+	}
 
-    public String getCreated_at() {
-        return created_at;
-    }
+	public boolean isStatus(){
+		return status;
+	}
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public String getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
-    }
-
-
+	@Override
+ 	public String toString(){
+		return 
+			"MemoResponse{" +
+			"data = '" + data + '\'' + 
+			",message = '" + message + '\'' + 
+			",status = '" + status + '\'' + 
+			"}";
+		}
 }

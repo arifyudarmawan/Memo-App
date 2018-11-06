@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.body().isStatus()) {
                             progressBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(getApplicationContext(), response.body().getToken(), Toast.LENGTH_SHORT).show();
                             // save token to shared preference
                             SharedPreferences.Editor editor = userPreference.edit();
                             editor.putString("token", response.body().getToken());

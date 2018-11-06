@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.pradiptaagus.app_project4.Model.Memo;
+import com.example.pradiptaagus.app_project4.Model.MemoItem;
 import com.example.pradiptaagus.app_project4.R;
 
 import java.util.List;
 
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder> {
-    private List<Memo> memoList;
+    private List<MemoItem> memoList;
 
     public class MemoViewHolder extends RecyclerView.ViewHolder {
         public TextView title, detail;
@@ -25,7 +25,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         }
     }
 
-    public MemoAdapter(List<Memo> memoList) {
+    public MemoAdapter(List<MemoItem> memoList) {
         this.memoList = memoList;
     }
 
@@ -39,7 +39,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MemoViewHolder memoViewHolder, int position) {
-        Memo memo = memoList.get(position);
+        MemoItem memo = memoList.get(position);
         memoViewHolder.title.setText(memo.getTitle());
         memoViewHolder.detail.setText(memo.getDetail());
     }
