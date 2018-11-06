@@ -9,4 +9,6 @@
     <string name="sign_up_underlined"><u>Sign Up</u></string>
     <string name="dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra hendrerit massa ut ullamcorper. Suspendisse risus ante, gravida at nibh eget, tempor consectetur mauris. Vivamus placerat efficitur nulla, a euismod massa eleifend ac.</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>
