@@ -26,6 +26,7 @@
             android:layout_marginBottom="@dimen/layout_margin"/>
 
         <EditText
+            android:id="@+id/et_memo_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Memo title"
@@ -33,6 +34,7 @@
             android:layout_marginBottom="@dimen/layout_margin"/>
 
         <EditText
+            android:id="@+id/et_memo_detail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -48,9 +50,10 @@
         android:padding="@dimen/layout_padding">
 
         <Button
+            android:id="@+id/btn_discard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
+            android:text="@string/discard"
             android:background="@drawable/button_no_border_radius_secondary"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/btn_save"/>
