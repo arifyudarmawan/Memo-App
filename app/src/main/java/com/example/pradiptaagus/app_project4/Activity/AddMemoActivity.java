@@ -74,7 +74,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btn_discard:
                 //Toast.makeText(this, "discard", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, LoginActivity.class));
+                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
     }
