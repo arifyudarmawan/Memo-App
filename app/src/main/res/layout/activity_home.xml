@@ -8,10 +8,6 @@
     tools:context=".Fragment.HomeFragment"
     tools:ignore="ExtraText">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
