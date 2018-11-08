@@ -28,7 +28,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_memo);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -36,7 +36,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), HomeFragment.class));
+                startActivity(new Intent(AddMemoActivity.this, MainActivity.class));
             }
         });
 
@@ -47,13 +47,13 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         String token = userPreference.getString("token", "missing");
 
         // get user input
-        etMemoTitle = (EditText) findViewById(R.id.et_memo_title);
-        etMemoDetail = (EditText) findViewById(R.id.et_memo_detail);
+        etMemoTitle = findViewById(R.id.et_memo_title);
+        etMemoDetail = findViewById(R.id.et_memo_detail);
 
-        btnSave = (Button) findViewById(R.id.btn_save);
+        btnSave = findViewById(R.id.btn_save);
         btnSave.setOnClickListener(this);
 
-        btnDiscard = (Button) findViewById(R.id.btn_discard);
+        btnDiscard = findViewById(R.id.btn_discard);
         btnDiscard.setOnClickListener(this);
 
         if (token == "missing") {
@@ -65,11 +65,6 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
 
     @Override
     public void onClick(View v) {
