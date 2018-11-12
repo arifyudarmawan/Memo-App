@@ -1,12 +1,12 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText et_email;
     private EditText et_password;
     private EditText et_confirm_password;
-    ProgressBar progressBar;
+    private ProgressDialog progresDialog;
     private Button btn_sign_up;
 
     @Override
@@ -33,14 +33,16 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        et_name = (EditText) findViewById(R.id.et_username);
-        et_email = (EditText) findViewById(R.id.et_email);
-        et_password = (EditText) findViewById(R.id.et_password);
-        et_confirm_password = (EditText) findViewById(R.id.et_confirm_password);
-        tv_login = (TextView) findViewById(R.id.tv_go_to_login_view);
-        btn_sign_up = (Button) findViewById(R.id.btn_sign_up);
-        progressBar = (ProgressBar) findViewById(R.id.pb_sign_up);
-        progressBar.setVisibility(View.INVISIBLE);
+        et_name = findViewById(R.id.et_username);
+        et_email = findViewById(R.id.et_email);
+        et_password = findViewById(R.id.et_password);
+        et_confirm_password = findViewById(R.id.et_confirm_password);
+        tv_login = findViewById(R.id.tv_go_to_login_view);
+        btn_sign_up = findViewById(R.id.btn_sign_up);
+
+        // ProgressDialog
+        progresDialog = new ProgressDialog(this);
+        progresDialog.setMessage("Creating new account...");
 
         // go to login view
         tv_login.setOnClickListener(new View.OnClickListener() {
@@ -60,19 +62,16 @@ public class SignUpActivity extends AppCompatActivity {
                 String email = et_email.getText().toString();
                 String password = et_password.getText().toString();
                 String confirm_password = et_confirm_password.getText().toString();
-                Toast.makeText(getApplicationContext(), confirm_password, Toast.LENGTH_SHORT).show();
 
-//                if (confirm_password == password) {
-//
-//
-//                } else if (confirm_password != password){
-//                    Toast.makeText(getApplicationContext(), "Confirm password doesnt match to password", Toast.LENGTH_SHORT).show();
-//                }
+                if (confirm_password.equals(password)) {
+                    progresDialog.show();
 
-                progressBar.setVisibility(View.VISIBLE);
+                    // call signup method
+                    signUp(name, email, password);
 
-                // call signup method
-                signUp(name, email, password);
+                } else if (confirm_password != password){
+                    Toast.makeText(getApplicationContext(), "Confirm password doesnt match to password", Toast.LENGTH_SHORT).show();
+                }
             }
 
             private void signUp(String name, String email, String password) {
@@ -83,19 +82,19 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                         if (response.body().isStatus()) {
-                            progressBar.setVisibility(View.INVISIBLE);
+                            progresDialog.dismiss();
                             Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                             startActivity(intent);
                         } else {
-                            progressBar.setVisibility(View.INVISIBLE);
+                            progresDialog.dismiss();
                             Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<SignUpResponse> call, Throwable t) {
-                        progressBar.setVisibility(View.INVISIBLE);
+                        progresDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
                     }
                 });

@@ -1,5 +1,6 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +11,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +29,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etEmail;
     private EditText etPassword;
     private ApiInterface apiInterface;
-    private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
+
     private SharedPreferences userPreference;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -46,10 +47,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvSignup = findViewById(R.id.tv_go_to_signup_view);
         tvSignup.setOnClickListener(this);
 
-        // get element progressbar
-        progressBar = findViewById(R.id.pb_login);
-        // set progressbar invisible
-        progressBar.setVisibility(View.INVISIBLE);
+        // ProgressDialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Logging in...");
+
 
         // get token from shared preference
         userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -83,8 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        progressBar.setVisibility(View.VISIBLE);
-        //Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
+        progressDialog.show();
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
 
@@ -94,11 +94,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                //Toast.makeText(getApplicationContext(), ""+response.body().isStatus(),Toast.LENGTH_SHORT).show();
                 if (response.body().isStatus()) {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), response.body().getToken(), Toast.LENGTH_SHORT).show();
+
                     // save token to shared preference
                     SharedPreferences.Editor editor = userPreference.edit();
                     editor.putString("token", response.body().getToken());
@@ -107,14 +107,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // go to home activity
                     loginActivity();
                 } else {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    progressDialog.dismiss();
+
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });

@@ -14,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="@dimen/layout_padding"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
         android:layout_weight="1">
 
 
@@ -25,23 +27,30 @@
             android:textSize="@dimen/login_title_size"
             android:layout_marginBottom="@dimen/layout_margin"/>
 
-        <EditText
-            android:id="@+id/et_memo_title"
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
             android:layout_height="wrap_content"
-            android:hint="Memo title"
-            android:background="@drawable/edit_text_no_border_radius"
-            android:layout_marginBottom="@dimen/layout_margin"/>
-
-        <EditText
-            android:id="@+id/et_memo_detail"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="Memo detail..."
-            android:gravity="top"
-            android:background="@drawable/edit_text_no_border_radius" />
+            android:layout_marginBottom="16dp">
+            <EditText
+                android:id="@+id/et_memo_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Memo title"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1">
+            <EditText
+                android:id="@+id/et_memo_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Memo detail..."
+                android:gravity="top"
+                android:scrollbars="vertical"/>
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <RelativeLayout
@@ -54,9 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/discard"
-            android:background="@drawable/button_no_border_radius_secondary"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/btn_save"/>
+            android:layout_toLeftOf="@+id/btn_save"
+            android:theme="@style/SecondaryFlatButton"/>
 
         <Button
             android:id="@+id/btn_save"
@@ -65,7 +74,7 @@
             android:text="@string/save"
             android:layout_gravity="right"
             android:layout_alignParentRight="true"
-            android:background="@drawable/button_no_border_radius"/>
+            android:theme="@style/PrimaryButton"/>
 
     </RelativeLayout>
 

@@ -30,55 +30,76 @@
             android:textSize="@dimen/login_title_size"
             android:gravity="center"/>
 
-        <EditText
-            android:layout_marginTop="@dimen/login_et_margin"
-            android:id="@+id/et_username"
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
+            android:layout_below="@id/signup_title"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/signup_title"
-            android:hint="Username"
-            android:inputType="text"
-            android:background="@drawable/edit_text_with_border_radius"/>
+            android:layout_width="match_parent"
+            android:id="@+id/input_layout_username"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:layout_marginTop="@dimen/login_et_margin"
-            android:id="@+id/et_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/et_username"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/edit_text_with_border_radius"/>
+            <EditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:singleLine="true"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:layout_marginTop="@dimen/login_et_margin"
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
+            android:layout_below="@+id/input_layout_username"
+            android:id="@+id/input_layout_email"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_email"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            android:background="@drawable/edit_text_with_border_radius"/>
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp">
 
-        <EditText
-            android:layout_marginTop="@dimen/login_et_margin"
-            android:id="@+id/et_confirm_password"
-            android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="@string/email"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_below="@+id/input_layout_email"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_password"
-            android:inputType="textPassword"
-            android:hint="@string/confirm_password"
-            android:background="@drawable/edit_text_with_border_radius"/>
+            android:layout_width="match_parent"
+            android:id="@+id/input_layout_password"
+            android:layout_marginBottom="16dp">
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:hint="@string/password"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_below="@+id/input_layout_password"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/input_layout_confirm_password">
+            <EditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:hint="Confirm password"/>
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/btn_sign_up"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_confirm_password"
+            android:layout_below="@+id/input_layout_confirm_password"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
-            android:background="@drawable/button_with_border_radius"
-            android:text="@string/sign_up" />
+            android:text="@string/sign_up"
+            android:theme="@style/PrimaryFlatButton"/>
 
         <LinearLayout
             android:layout_marginTop="@dimen/login_et_margin"
@@ -101,15 +122,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/pb_sign_up"
-        style="@android:style/Widget.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:progress="25"
-        android:layout_gravity="center"
-        android:foregroundGravity="center"
-        android:backgroundTint="@color/colorAccent"/>
-
 </FrameLayout>

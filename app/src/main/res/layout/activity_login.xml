@@ -30,34 +30,42 @@
             android:textSize="@dimen/login_title_size"
             android:gravity="center"/>
 
-        <EditText
-            android:layout_marginTop="@dimen/login_et_margin"
-            android:id="@+id/et_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <android.support.design.widget.TextInputLayout
             android:layout_below="@+id/login_title"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/edit_text_with_border_radius"/>
-
-        <EditText
-            android:layout_marginTop="@dimen/login_et_margin"
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
+            android:id="@+id/input_layout_email"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_email"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            android:background="@drawable/edit_text_with_border_radius"/>
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp">
 
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="@string/email"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_below="@+id/input_layout_email"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/input_layout_password">
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:hint="@string/password"/>
+        </android.support.design.widget.TextInputLayout>
         <Button
             android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/et_password"
+            android:layout_below="@+id/input_layout_password"
             android:layout_marginTop="24dp"
-            android:background="@drawable/button_with_border_radius"
+            android:theme="@style/PrimaryFlatButton"
             android:layout_centerHorizontal="true"
             android:text="@string/login" />
 
@@ -82,15 +90,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/pb_login"
-        style="@android:style/Widget.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:progress="25"
-        android:layout_gravity="center"
-        android:foregroundGravity="center"
-        android:backgroundTint="@color/colorAccent"/>
-
 </FrameLayout>
