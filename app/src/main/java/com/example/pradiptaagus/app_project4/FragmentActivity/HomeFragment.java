@@ -60,16 +60,6 @@ public class HomeFragment extends Fragment {
         SharedPreferences userPreference = view.getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         String token = userPreference.getString("token", "missing");
 
-        // floating button action
-        fab = view.findViewById(R.id.fab_add_memo);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddMemoActivity.class);
-                startActivity(intent);
-            }
-        });
-
         // recycler view
         recyclerView = view.findViewById(R.id.my_recycler_view);
         adapter = new MemoAdapter(memoList);
@@ -119,17 +109,17 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.show();
-                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
-                    fab.show();
-                }
-            }
-        });
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+////            @Override
+////            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+////                super.onScrolled(recyclerView, dx, dy);
+////                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+////                    fab.show();
+////                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+////                    fab.show();
+////                }
+////            }
+////        });
 
         prepareMemoData(token);
 

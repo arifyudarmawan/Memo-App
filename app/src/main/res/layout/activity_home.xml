@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FragmentActivity.HomeFragment"
+    android:fitsSystemWindows="true"
     tools:ignore="ExtraText">
 
     <android.support.v7.widget.RecyclerView
@@ -15,17 +16,4 @@
         android:layout_below="@id/toolbar"
         android:scrollbars="vertical"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/fab_add_memo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="60dp"
-        app:layout_anchor="@id/toolbar"
-        app:layout_anchorGravity="top|end"
-        android:src="@drawable/ic_add_white_24dp"
-        app:backgroundTint="@color/colorPrimary"/>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
