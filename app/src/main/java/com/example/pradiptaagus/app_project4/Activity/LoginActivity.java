@@ -56,14 +56,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
         String token = userPreference.getString("token", "missing");
 
+        // check token
         if (token != "missing") {
             loginActivity();
         }
     }
 
+    // go to login activity method
     private void loginActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    // go to sign up method
     private void signup() {
         startActivity(new Intent(this, SignUpActivity.class));
     }
@@ -97,7 +99,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.body().isStatus()) {
                     progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), response.body().getToken(), Toast.LENGTH_SHORT).show();
 
                     // save token to shared preference
                     SharedPreferences.Editor editor = userPreference.edit();
@@ -108,7 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     loginActivity();
                 } else {
                     progressDialog.dismiss();
-
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }

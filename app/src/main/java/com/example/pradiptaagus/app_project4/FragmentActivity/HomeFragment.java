@@ -129,8 +129,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareMemoData(String token) {
-        Toast.makeText(getContext(), token, Toast.LENGTH_SHORT).show();
-
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<MemoResponse> call = apiInterface.getAllMemo(token);
         call.enqueue(new Callback<MemoResponse>() {
@@ -138,7 +136,7 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<MemoResponse> call, Response<MemoResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body().isStatus()) {
-                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         memoList.clear();
                         memoList.addAll(response.body().getData());
                         adapter.notifyDataSetChanged();
