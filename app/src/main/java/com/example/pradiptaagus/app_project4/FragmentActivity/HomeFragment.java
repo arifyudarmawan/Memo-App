@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.my_recycler_view);
         adapter = new MemoAdapter(memoList);
         recyclerView.setHasFixedSize(true);
+
         // vertical recycler view
         // keep item_recycler_view width to match_parent
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -161,5 +163,16 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.home_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_memo:
+                startActivity(new Intent(getContext(), AddMemoActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
