@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
+                    fab.show();
                 } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
                     fab.show();
                 }
