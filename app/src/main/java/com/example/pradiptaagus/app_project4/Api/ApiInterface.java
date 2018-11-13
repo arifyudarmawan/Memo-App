@@ -1,9 +1,10 @@
 package com.example.pradiptaagus.app_project4.Api;
 
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
-import com.example.pradiptaagus.app_project4.Model.MemoItem;
+import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoResponse;
 import com.example.pradiptaagus.app_project4.Model.SignUpResponse;
+import com.example.pradiptaagus.app_project4.Model.UserResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -30,6 +31,17 @@ public interface ApiInterface {
 
     @GET("memo")
     Call<MemoResponse> getAllMemo(
+            @Query("token") String token
+    );
+
+
+    @POST("me")
+    Call<UserResponse> getUser(
+            @Query("token") String token
+    );
+
+    @POST("logout")
+    Call<LogoutResponse> logout(
             @Query("token") String token
     );
 }

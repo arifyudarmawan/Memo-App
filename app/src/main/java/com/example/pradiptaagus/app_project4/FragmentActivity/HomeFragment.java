@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,7 @@ import com.example.pradiptaagus.app_project4.Activity.AddMemoActivity;
 import com.example.pradiptaagus.app_project4.Adapter.MemoAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
-import com.example.pradiptaagus.app_project4.Model.MemoItem;
+import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoResponse;
 import com.example.pradiptaagus.app_project4.R;
 import com.example.pradiptaagus.app_project4.Util.RecyclerTouchListener;
@@ -38,10 +37,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
-    private List<MemoItem> memoList = new ArrayList<>();
+    private List<MemoItemResponse> memoList = new ArrayList<>();
     private RecyclerView recyclerView;
     private MemoAdapter adapter;
-    private FloatingActionButton fab;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -80,7 +78,7 @@ public class HomeFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                MemoItem memo = memoList.get(position);
+                MemoItemResponse memo = memoList.get(position);
                 memo.getId();
                 Toast.makeText(getContext(), memo.getTitle() + " is selected", Toast.LENGTH_SHORT).show();
             }
@@ -104,7 +102,7 @@ public class HomeFragment extends Fragment {
                 });
                 alertDialog.create().show();
 
-                MemoItem memo = memoList.get(position);
+                MemoItemResponse memo = memoList.get(position);
                 Toast.makeText(getContext(), memo.getDetail(), Toast.LENGTH_SHORT).show();
             }
         }));

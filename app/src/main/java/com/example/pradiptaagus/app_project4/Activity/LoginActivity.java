@@ -58,13 +58,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // check token
         if (token != "missing") {
-            loginActivity();
+            MainActivity();
         }
     }
 
     // go to login activity method
-    private void loginActivity() {
+    private void MainActivity() {
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.apply();
 
                     // go to home activity
-                    loginActivity();
+                    MainActivity();
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();

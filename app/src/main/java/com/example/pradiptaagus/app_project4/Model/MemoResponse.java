@@ -7,7 +7,7 @@ import java.util.List;
 public class MemoResponse {
 
 	@SerializedName("data")
-	private List<MemoItem> data;
+	private List<MemoItemResponse> data;
 
 	@SerializedName("message")
 	private String message;
@@ -15,11 +15,11 @@ public class MemoResponse {
 	@SerializedName("status")
 	private boolean status;
 
-	public void setData(List<MemoItem> data){
+	public void setData(List<MemoItemResponse> data){
 		this.data = data;
 	}
 
-	public List<MemoItem> getData(){
+	public List<MemoItemResponse> getData(){
 		return data;
 	}
 

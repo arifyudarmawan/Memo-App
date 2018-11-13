@@ -25,6 +25,7 @@
                 android:src="@drawable/ic_account_circle_black_24dp" />
 
             <TextView
+                android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -35,12 +36,23 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="user@mail.com"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:layout_gravity="center_horizontal"/>
+
         </LinearLayout>
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log out"
+        android:layout_gravity="center_horizontal"
+        android:theme="@style/PrimaryFlatButton"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
