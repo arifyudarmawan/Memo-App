@@ -3,6 +3,7 @@ package com.example.pradiptaagus.app_project4.Api;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
 import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoResponse;
+import com.example.pradiptaagus.app_project4.Model.MemoStoreResponse;
 import com.example.pradiptaagus.app_project4.Model.SignUpResponse;
 import com.example.pradiptaagus.app_project4.Model.UserResponse;
 
@@ -43,5 +44,14 @@ public interface ApiInterface {
     @POST("logout")
     Call<LogoutResponse> logout(
             @Query("token") String token
+    );
+
+    @FormUrlEncoded
+    @POST("memo")
+    Call<MemoStoreResponse> storeMemo(
+            @Query("token") String token,
+            @Field("title") String title,
+            @Field("detail") String detail,
+            @Field("user_id") int userId
     );
 }
