@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Activity.AddMemoActivity;
+import com.example.pradiptaagus.app_project4.Activity.UpdateMemoActivity;
 import com.example.pradiptaagus.app_project4.Adapter.MemoAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment {
     private List<MemoItemResponse> memoList = new ArrayList<>();
     private RecyclerView recyclerView;
     private MemoAdapter adapter;
+    private MemoItemResponse memo;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -78,13 +80,15 @@ public class HomeFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                MemoItemResponse memo = memoList.get(position);
-                memo.getId();
-                Toast.makeText(getContext(), memo.getTitle() + " is selected", Toast.LENGTH_SHORT).show();
+                memo = memoList.get(position);
+//                Toast.makeText(getContext(), memo.getTitle() + " is selected", Toast.LENGTH_SHORT).show();
+
+
             }
 
             @Override
-            public void onLongClick(View view, int position) {
+            public void onLongClick(View view, final int position) {
+                memo = memoList.get(position);
                 String[] menu = {"Detail", "Edit", "Delete"};
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Menu");
@@ -94,16 +98,15 @@ public class HomeFragment extends Fragment {
                         if (which == 0) {
                             Toast.makeText(getContext(), "Detail", Toast.LENGTH_SHORT).show();
                         } else if (which == 1) {
-                            Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getContext(), UpdateMemoActivity.class);
+                            intent.putExtra("memo_id", memo.getId());
+                            startActivity(intent);
                         } else if (which == 2) {
                             Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
                 alertDialog.create().show();
-
-                MemoItemResponse memo = memoList.get(position);
-                Toast.makeText(getContext(), memo.getDetail(), Toast.LENGTH_SHORT).show();
             }
         }));
 
