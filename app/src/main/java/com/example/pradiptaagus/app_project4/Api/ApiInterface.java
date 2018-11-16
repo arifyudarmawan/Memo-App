@@ -1,5 +1,6 @@
 package com.example.pradiptaagus.app_project4.Api;
 
+import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
 import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
@@ -10,6 +11,7 @@ import com.example.pradiptaagus.app_project4.Model.UpdateMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.UserResponse;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -74,6 +76,12 @@ public interface ApiInterface {
 
     @GET("getMemoById/{memo_id}")
     Call<GetMemoByIdResponse> getMemoById(
+            @Path("memo_id") int memo_id,
+            @Query("token") String token
+    );
+
+    @DELETE("memo/{memo_id}")
+    Call<DeleteMemoResponse> deleteMemo(
             @Path("memo_id") int memo_id,
             @Query("token") String token
     );

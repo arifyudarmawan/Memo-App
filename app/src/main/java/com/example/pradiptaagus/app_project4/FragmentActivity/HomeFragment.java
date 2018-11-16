@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,7 @@ import com.example.pradiptaagus.app_project4.Activity.UpdateMemoActivity;
 import com.example.pradiptaagus.app_project4.Adapter.MemoAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoResponse;
 import com.example.pradiptaagus.app_project4.R;
@@ -42,6 +44,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private MemoAdapter adapter;
     private MemoItemResponse memo;
+    private ApiInterface apiInterface;
+    private String token;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -54,12 +58,12 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_home, container, false);
 
         SharedPreferences userPreference = view.getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        String token = userPreference.getString("token", "missing");
+        token = userPreference.getString("token", "missing");
 
         // recycler view
         recyclerView = view.findViewById(R.id.my_recycler_view);
@@ -81,9 +85,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 memo = memoList.get(position);
-//                Toast.makeText(getContext(), memo.getTitle() + " is selected", Toast.LENGTH_SHORT).show();
-
-
+                Toast.makeText(getContext(), "item "+memo, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -91,7 +93,6 @@ public class HomeFragment extends Fragment {
                 memo = memoList.get(position);
                 String[] menu = {"Detail", "Edit", "Delete"};
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                alertDialog.setTitle("Menu");
                 alertDialog.setItems(menu, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -102,8 +103,36 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("memo_id", memo.getId());
                             startActivity(intent);
                         } else if (which == 2) {
-                            Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                            removeRecyclerViewItem(position, memo.getId(), token);
+//                            Toast.makeText(getContext(), "Delete + " +memo.getTitle(), Toast.LENGTH_SHORT).show();
                         }
+                    }
+
+                    private void removeRecyclerViewItem(int position, int memo_id, String token) {
+                        memoList.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, memoList.size());
+
+                        // remove item on database
+                        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                        Call<DeleteMemoResponse> call = apiInterface.deleteMemo(memo_id, token);
+                        call.enqueue(new Callback<DeleteMemoResponse>() {
+                            @Override
+                            public void onResponse(Call<DeleteMemoResponse> call, Response<DeleteMemoResponse> response) {
+                                if (response.body().isStatus()) {
+                                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.d("Tag", "error");
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<DeleteMemoResponse> call, Throwable t) {
+                                Log.d("Tag", "error", t);
+                                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
                 alertDialog.create().show();
@@ -130,7 +159,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareMemoData(String token) {
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<MemoResponse> call = apiInterface.getAllMemo(token);
         call.enqueue(new Callback<MemoResponse>() {
             @Override

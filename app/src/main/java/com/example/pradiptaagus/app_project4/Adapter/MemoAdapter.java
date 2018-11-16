@@ -2,6 +2,7 @@ package com.example.pradiptaagus.app_project4.Adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
         public MemoViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.tv_memo_title);
-            detail = (TextView) view.findViewById(R.id.tv_memo_detail);
+            title = view.findViewById(R.id.tv_memo_title);
+            detail = view.findViewById(R.id.tv_memo_detail);
         }
     }
 
@@ -48,8 +49,5 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     public int getItemCount() {
         return memoList.size();
     }
-
-
-
 
 }
