@@ -41,8 +41,16 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     @Override
     public void onBindViewHolder(@NonNull MemoViewHolder memoViewHolder, int position) {
         MemoItemResponse memo = memoList.get(position);
-        memoViewHolder.title.setText(memo.getTitle());
-        memoViewHolder.detail.setText(memo.getDetail());
+        String title = memo.getTitle();
+        if (title.length() >= 22) {
+            title = title.substring(0,22).concat("...");
+        }
+        String detail = memo.getDetail();
+        if (detail.length() >= 130) {
+            detail = detail.substring(0, 130).concat("...");
+        }
+        memoViewHolder.title.setText(title);
+        memoViewHolder.detail.setText(detail);
     }
 
     @Override

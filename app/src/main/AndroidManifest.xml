@@ -29,7 +29,8 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".Activity.UpdateMemoActivity"></activity>
+        <activity android:name=".Activity.UpdateMemoActivity" />
+        <activity android:name=".Activity.DetailActivity"></activity>
     </application>
 
 </manifest>

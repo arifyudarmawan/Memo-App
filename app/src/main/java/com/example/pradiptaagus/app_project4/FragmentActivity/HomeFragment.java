@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Activity.AddMemoActivity;
+import com.example.pradiptaagus.app_project4.Activity.DetailActivity;
 import com.example.pradiptaagus.app_project4.Activity.UpdateMemoActivity;
 import com.example.pradiptaagus.app_project4.Adapter.MemoAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
@@ -85,7 +86,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 memo = memoList.get(position);
-                Toast.makeText(getContext(), "item "+memo, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra("memo_id", memo.getId());
+                startActivity(intent);
             }
 
             @Override
@@ -97,7 +100,9 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            Toast.makeText(getContext(), "Detail", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getContext(), DetailActivity.class);
+                            intent.putExtra("memo_id", memo.getId());
+                            startActivity(intent);
                         } else if (which == 1) {
                             Intent intent = new Intent(getContext(), UpdateMemoActivity.class);
                             intent.putExtra("memo_id", memo.getId());
@@ -154,7 +159,6 @@ public class HomeFragment extends Fragment {
 ////        });
 
         prepareMemoData(token);
-
         return view;
     }
 
