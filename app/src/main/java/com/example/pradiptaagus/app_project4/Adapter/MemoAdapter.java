@@ -11,18 +11,22 @@ import android.widget.TextView;
 import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder> {
     private List<MemoItemResponse> memoList;
 
     public class MemoViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, detail;
+        public TextView title, detail, date;
 
         public MemoViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.tv_memo_title);
             detail = view.findViewById(R.id.tv_memo_detail);
+            date = view.findViewById(R.id.tv_memo_date);
         }
     }
 
@@ -51,6 +55,19 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         }
         memoViewHolder.title.setText(title);
         memoViewHolder.detail.setText(detail);
+        memoViewHolder.date.setText(formatDate(memo.getUpdatedAt()));
+    }
+
+    private String formatDate(String updatedAt) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = simpleDateFormat.parse(updatedAt);
+            SimpleDateFormat simpleDateFormatOut = new SimpleDateFormat("dd-MMM-yyyy");
+            return simpleDateFormatOut.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
