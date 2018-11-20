@@ -20,6 +20,9 @@ import com.example.pradiptaagus.app_project4.Api.ApiInterface;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.zip.Inflater;
 
 import retrofit2.Callback;
@@ -28,9 +31,11 @@ import retrofit2.Response;
 public class DetailActivity extends AppCompatActivity {
     private TextView tvTitle;
     private TextView tvDetail;
+    private TextView tvDate;
     private String title;
     private String detail;
     private String token;
+    private String date;
     private int userId;
     private int memoId;
     private ApiInterface apiInterface;
@@ -50,6 +55,7 @@ public class DetailActivity extends AppCompatActivity {
 
         tvTitle = findViewById(R.id.tv_memo_title);
         tvDetail = findViewById(R.id.tv_memo_detail);
+        tvDate = findViewById(R.id.tv_memo_date);
 
         // scrolling textview tv_memo_detail
         tvDetail.setMovementMethod(new ScrollingMovementMethod());
@@ -84,8 +90,24 @@ public class DetailActivity extends AppCompatActivity {
             public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
                 title = response.body().getTitle();
                 detail = response.body().getDetail();
+                date = (String) response.body().getCreatedAt();
+
                 tvTitle.setText(title);
                 tvDetail.setText(detail);
+                tvDate.setText(formatDate(date));
+
+            }
+
+            private String formatDate(String updateAt) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    Date date = simpleDateFormat.parse(updateAt);
+                    SimpleDateFormat simpleDateFormatOut = new SimpleDateFormat("dd-MMM-yyyy");
+                    return simpleDateFormatOut.format(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return "";
             }
 
             @Override

@@ -60,7 +60,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         btnLogout = view.findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(this);
 
-        //progressdialog
+        //progress dialog
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loging out...");
 
@@ -70,7 +70,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
             tvEmail.setText(email);
         }
 
-        // retrive data from api
+        // retrieve data from api
         getUserData(token);
 
         return view;

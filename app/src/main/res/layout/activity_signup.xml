@@ -99,7 +99,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:text="@string/sign_up"
-            android:theme="@style/PrimaryFlatButton"/>
+            android:theme="@style/PrimaryButton"/>
 
         <LinearLayout
             android:layout_marginTop="@dimen/login_et_margin"
