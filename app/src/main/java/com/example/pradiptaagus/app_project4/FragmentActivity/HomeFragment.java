@@ -7,8 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -77,13 +78,18 @@ public class HomeFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        prepareMemoData(token);
-//        adapter = new MemoAdapter(memoList);
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setAdapter(adapter);
 
-        // adding divider line
-        // recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //insert data to recyclerview
+
+        if (this.isConnected()) {
+//            Toast.makeText(getContext(), "connect", Toast.LENGTH_SHORT).show();
+            prepareMemoData(token);
+        } else {
+//            Toast.makeText(getContext(), "disconnect", Toast.LENGTH_SHORT).show();
+            loadFromDatabase();
+        }
+
+//        prepareMemoData(token);
 
         // row click listener
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
@@ -113,7 +119,7 @@ public class HomeFragment extends Fragment {
                             startActivity(intent);
                         } else if (which == 2) {
                             removeRecyclerViewItem(position, memo.getId(), token);
-//                            Toast.makeText(getContext(), "Delete + " +memo.getTitle(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Delete " +memo.getTitle(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -133,7 +139,6 @@ public class HomeFragment extends Fragment {
                                 } else {
                                     Log.d("Tag", "error");
                                 }
-
                             }
 
                             @Override
@@ -147,23 +152,16 @@ public class HomeFragment extends Fragment {
                 alertDialog.create().show();
             }
         }));
-
-//        recyclerView.setAdapter(adapter);
-
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-////            @Override
-////            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-////                super.onScrolled(recyclerView, dx, dy);
-////                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-////                    fab.show();
-////                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
-////                    fab.show();
-////                }
-////            }
-////        });
-
-
         return view;
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean status = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return status;
     }
 
     private void prepareMemoData(String token) {
@@ -174,18 +172,17 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<MemoResponse> call, Response<MemoResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body().isStatus()) {
-                        //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-
+                        // get all response from api
                         memoList.addAll(response.body().getData());
-//                        adapter.notifyDataSetChanged();
 
+                        // store to local database (SQLite)
                         storeToLocalDatabase();
-                        memoList.clear();
-                        readFromDatabase();
-                        adapter = new MemoAdapter(memoList);
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setAdapter(adapter);
 
+                        // clear memoList cache
+                        memoList.clear();
+
+                        // load data from local database (SQLite)
+                        loadFromDatabase();
                     } else {
                         Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -193,48 +190,6 @@ public class HomeFragment extends Fragment {
                     Toast.makeText(getContext(), "Internal server error", Toast.LENGTH_SHORT).show();
                 }
 
-            }
-
-            private void readFromDatabase() {
-                Toast.makeText(getContext(), "test", Toast.LENGTH_SHORT).show();
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-                // Define a projection that specifies which columns from the database
-                // you will actually use after this query.
-                String[] projection = {
-                        "id",
-                        "title",
-                        "detail",
-                        "user_id",
-                        "created_at",
-                        "updated_at"
-                };
-
-                Cursor cursor = db.query(
-                        "memos",
-                        projection,
-                        null,
-                        null,
-                        null,
-                        null,
-                        "id DESC"
-                );
-
-//                Cursor cursor = db.rawQuery("SELECT * FROM memos ORDER BY id DESC", null);
-
-                while (cursor.moveToNext()) {
-                    MemoItemResponse memo = new MemoItemResponse();
-                    memo.setId(cursor.getInt(0));
-                    memo.setTitle(cursor.getString(1));
-                    memo.setDetail(cursor.getString(2));
-                    memo.setUserId(cursor.getInt(3));
-                    memo.setCreatedAt(cursor.getString(4));
-                    memo.setUpdatedAt(cursor.getString(5));
-
-                    memoList.add(memo);
-                }
-                cursor.close();
-                Toast.makeText(getContext(), memoList.size()+"", Toast.LENGTH_SHORT).show();
             }
 
             private void storeToLocalDatabase() {
@@ -258,9 +213,50 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<MemoResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadFromDatabase() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                "id",
+                "title",
+                "detail",
+                "user_id",
+                "created_at",
+                "updated_at"
+        };
+
+        Cursor cursor = db.query(
+                "memos",
+                projection,
+                null,
+                null,
+                null,
+                null,
+                "id DESC"
+        );
+
+        while (cursor.moveToNext()) {
+            MemoItemResponse memo = new MemoItemResponse();
+            memo.setId(cursor.getInt(0));
+            memo.setTitle(cursor.getString(1));
+            memo.setDetail(cursor.getString(2));
+            memo.setUserId(cursor.getInt(3));
+            memo.setCreatedAt(cursor.getString(4));
+            memo.setUpdatedAt(cursor.getString(5));
+
+            memoList.add(memo);
+        }
+        cursor.close();
+        adapter = new MemoAdapter(memoList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

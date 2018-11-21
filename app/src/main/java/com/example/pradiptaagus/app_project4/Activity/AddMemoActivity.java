@@ -44,7 +44,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AddMemoActivity.this, MainActivity.class));
+                finish();
             }
         });
 
@@ -82,7 +82,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
                 storeMemo(token);
                 break;
             case R.id.btn_discard:
-                startActivity(new Intent(this, MainActivity.class));
+                finish();
                 break;
         }
     }
@@ -98,7 +98,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onResponse(retrofit2.Call<StoreMemoResponse> call, Response<StoreMemoResponse> response) {
                 Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(AddMemoActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override

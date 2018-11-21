@@ -40,13 +40,6 @@
                     android:layout_marginBottom="10dp"/>
 
                 <TextView
-                    android:id="@+id/tv_modified"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/modified"
-                    android:layout_below="@+id/tv_memo_detail"
-                    android:layout_toStartOf="@+id/tv_memo_date"/>
-                <TextView
                     android:id="@+id/tv_memo_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

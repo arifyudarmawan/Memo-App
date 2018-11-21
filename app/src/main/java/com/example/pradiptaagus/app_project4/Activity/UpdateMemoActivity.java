@@ -47,7 +47,7 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UpdateMemoActivity.this, MainActivity.class));
+                finish();
             }
         });
 
@@ -107,7 +107,7 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
                 updateMemo(token, memoId, userId);
                 break;
             case R.id.btn_discard:
-                startActivity(new Intent(this, MainActivity.class));
+                finish();
         }
     }
 
@@ -122,7 +122,7 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onResponse(retrofit2.Call<UpdateMemoResponse> call, Response<UpdateMemoResponse> response) {
                 Toast.makeText(UpdateMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(UpdateMemoActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override

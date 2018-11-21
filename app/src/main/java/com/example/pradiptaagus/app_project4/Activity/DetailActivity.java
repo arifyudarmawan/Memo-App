@@ -3,6 +3,10 @@ package com.example.pradiptaagus.app_project4.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +23,7 @@ import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.R;
+import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
     private int userId;
     private int memoId;
     private ApiInterface apiInterface;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +76,54 @@ public class DetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DetailActivity.this, MainActivity.class));
                 finish();
             }
         });
 
         if (token == "missing") {
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
 
-        getMemoData(memoId, token);
+        if (this.isConnected()) {
+            getMemoData(memoId, token);
+        } else {
+            loadFromDatabase();
+        }
+    }
+
+    private void loadFromDatabase() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                "id",
+                "title",
+                "detail",
+                "user_id",
+                "created_at",
+                "updated_at"
+        };
+
+        Cursor cursor = db.query(
+                "memos",
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean status = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return status;
     }
 
     private void getMemoData(int memoId, String token) {
@@ -94,7 +138,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 tvTitle.setText(title);
                 tvDetail.setText(detail);
-                tvDate.setText(formatDate(date));
+                tvDate.setText("Modified: " + formatDate(date));
 
             }
 
@@ -130,6 +174,7 @@ public class DetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, UpdateMemoActivity.class);
                 intent.putExtra("memo_id", memoId);
                 startActivity(intent);
+                finish();
         }
         return super.onOptionsItemSelected(item);
     }
