@@ -205,9 +205,7 @@ public class HomeFragment extends Fragment {
                     values.put("created_at", memoList.get(i).getCreatedAt());
                     values.put("updated_at", memoList.get(i).getUpdatedAt());
 
-                    long dick=db.insert("memos", null, values);
-
-                    Log.d("dick-"+i, dick+"");
+                    db.insert("memos", null, values);
                 }
             }
 

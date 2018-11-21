@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telecom.Call;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
+import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.R;
 import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
 
@@ -63,6 +65,8 @@ public class DetailActivity extends AppCompatActivity {
         tvDetail = findViewById(R.id.tv_memo_detail);
         tvDate = findViewById(R.id.tv_memo_date);
 
+        dbHelper = new DBHelper(this);
+
         // scrolling textview tv_memo_detail
         tvDetail.setMovementMethod(new ScrollingMovementMethod());
 
@@ -85,14 +89,10 @@ public class DetailActivity extends AppCompatActivity {
             finish();
         }
 
-        if (this.isConnected()) {
-            getMemoData(memoId, token);
-        } else {
-            loadFromDatabase();
-        }
+        loadFromDatabase(memoId);
     }
 
-    private void loadFromDatabase() {
+    private void loadFromDatabase(int memoId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // Define a projection that specifies which columns from the database
@@ -106,15 +106,27 @@ public class DetailActivity extends AppCompatActivity {
                 "updated_at"
         };
 
+        //filter result where id = memoId
+        String selection = "id = ?";
+        String[] selectionArgs = {String.valueOf(memoId)};
+
         Cursor cursor = db.query(
                 "memos",
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null,
                 null,
                 null
         );
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        tvTitle.setText(cursor.getString(cursor.getColumnIndex("title")));
+        tvDetail.setText(cursor.getString(cursor.getColumnIndex("detail")));
+        tvDate.setText(formatDate(cursor.getString(cursor.getColumnIndex("updated_at"))));
     }
 
     private boolean isConnected() {
@@ -126,39 +138,39 @@ public class DetailActivity extends AppCompatActivity {
         return status;
     }
 
-    private void getMemoData(int memoId, String token) {
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        retrofit2.Call<GetMemoByIdResponse> call = apiInterface.getMemoById(memoId, token);
-        call.enqueue(new Callback<GetMemoByIdResponse>() {
-            @Override
-            public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
-                title = response.body().getTitle();
-                detail = response.body().getDetail();
-                date = (String) response.body().getCreatedAt();
+//    private void getMemoData(int memoId, String token) {
+//        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+//        retrofit2.Call<GetMemoByIdResponse> call = apiInterface.getMemoById(memoId, token);
+//        call.enqueue(new Callback<GetMemoByIdResponse>() {
+//            @Override
+//            public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
+//                title = response.body().getTitle();
+//                detail = response.body().getDetail();
+//                date = (String) response.body().getCreatedAt();
+//
+//                tvTitle.setText(title);
+//                tvDetail.setText(detail);
+//                tvDate.setText("Modified: " + formatDate(date));
+//
+//            }
+//
+//            @Override
+//            public void onFailure(retrofit2.Call<GetMemoByIdResponse> call, Throwable t) {
+//                Toast.makeText(DetailActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
-                tvTitle.setText(title);
-                tvDetail.setText(detail);
-                tvDate.setText("Modified: " + formatDate(date));
-
-            }
-
-            private String formatDate(String updateAt) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                try {
-                    Date date = simpleDateFormat.parse(updateAt);
-                    SimpleDateFormat simpleDateFormatOut = new SimpleDateFormat("dd-MMM-yyyy");
-                    return simpleDateFormatOut.format(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return "";
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<GetMemoByIdResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private String formatDate(String updateAt) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = simpleDateFormat.parse(updateAt);
+            SimpleDateFormat simpleDateFormatOut = new SimpleDateFormat("dd-MMM-yyyy");
+            return simpleDateFormatOut.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
