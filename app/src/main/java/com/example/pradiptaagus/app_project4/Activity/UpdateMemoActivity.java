@@ -1,8 +1,10 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +21,10 @@ import com.example.pradiptaagus.app_project4.Api.ApiInterface;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.Model.UpdateMemoResponse;
 import com.example.pradiptaagus.app_project4.R;
+import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,6 +40,7 @@ public class UpdateMemoActivity extends AppCompatActivity {
     private int userId;
     private int memoId;
     private ApiInterface apiInterface;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,8 @@ public class UpdateMemoActivity extends AppCompatActivity {
         // get token from shared preference
         token = userPreference.getString("token", "missing");
         userId = userPreference.getInt("userId", 0);
+
+        dbHelper = new DBHelper(this);
 
         //get memo id from previous activity
         Intent intent = getIntent();
@@ -96,7 +105,7 @@ public class UpdateMemoActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    private void updateMemo(String token, int memoId, int userId) {
+    private void updateMemo(String token, final int memoId, int userId) {
         // get user input
         title = etMemoTitle.getText().toString();
         detail = etMemoDetail.getText().toString();
@@ -107,6 +116,22 @@ public class UpdateMemoActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit2.Call<UpdateMemoResponse> call, Response<UpdateMemoResponse> response) {
                 Toast.makeText(UpdateMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                // update sqlite
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                ContentValues contentValues = new ContentValues();
+
+                String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+                //store data to Contentvalues variable
+                contentValues.put("title", title);
+                contentValues.put("detail", detail);
+                contentValues.put("updated_at", timestamp);
+
+                String args[] = new String[]{Integer.toString(memoId)};
+
+                db.update("memos", contentValues, "id=?", args);
+
                 finish();
             }
 

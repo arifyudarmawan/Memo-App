@@ -166,10 +166,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void init(String token) {
         if (this.isConnected()) {
-//            Toast.makeText(getContext(), "connect", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "connect", Toast.LENGTH_SHORT).show();
             prepareMemoData(token);
         } else {
-//            Toast.makeText(getContext(), "disconnect", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "disconnect", Toast.LENGTH_SHORT).show();
             loadFromDatabase();
         }
     }
