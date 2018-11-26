@@ -1,11 +1,15 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +23,7 @@ import com.example.pradiptaagus.app_project4.R;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddMemoActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddMemoActivity extends AppCompatActivity {
     private EditText etMemoTitle;
     private EditText etMemoDetail;
     private String title;
@@ -37,7 +41,7 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("New Memo");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         // handling toolbar menu on click
@@ -59,12 +63,6 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         etMemoTitle = findViewById(R.id.et_memo_title);
         etMemoDetail = findViewById(R.id.et_memo_detail);
 
-        btnSave = findViewById(R.id.btn_save);
-        btnSave.setOnClickListener(this);
-
-        btnDiscard = findViewById(R.id.btn_discard);
-        btnDiscard.setOnClickListener(this);
-
         if (token == "missing") {
             loginActivity();
         }
@@ -74,18 +72,6 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_save:
-                storeMemo(token);
-                break;
-            case R.id.btn_discard:
-                finish();
-                break;
-        }
-    }
 
     private void storeMemo(String token) {
         // get user input
@@ -99,6 +85,8 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(retrofit2.Call<StoreMemoResponse> call, Response<StoreMemoResponse> response) {
                 Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
+                FragmentTransaction homeFragment = getFragmentManager().beginTransaction();
+
             }
 
             @Override
@@ -106,5 +94,20 @@ public class AddMemoActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(AddMemoActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.create_memo_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.save:
+                storeMemo(token);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.pradiptaagus.app_project4.FragmentActivity;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -45,7 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private List<MemoItemResponse> memoList = new ArrayList<>();
     private RecyclerView recyclerView;
     private MemoAdapter adapter;
@@ -53,6 +55,7 @@ public class HomeFragment extends Fragment {
     private ApiInterface apiInterface;
     private String token;
     DBHelper dbHelper;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -64,6 +67,7 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,17 +83,22 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        //swipe refresh layout
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+
         //insert data to recyclerview
+        init(token);
 
-        if (this.isConnected()) {
-//            Toast.makeText(getContext(), "connect", Toast.LENGTH_SHORT).show();
-            prepareMemoData(token);
-        } else {
-//            Toast.makeText(getContext(), "disconnect", Toast.LENGTH_SHORT).show();
-            loadFromDatabase();
-        }
+        swipeRefreshLayout.setOnRefreshListener(this);
 
-//        prepareMemoData(token);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                init(token);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         // row click listener
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
@@ -153,6 +162,16 @@ public class HomeFragment extends Fragment {
             }
         }));
         return view;
+    }
+
+    private void init(String token) {
+        if (this.isConnected()) {
+//            Toast.makeText(getContext(), "connect", Toast.LENGTH_SHORT).show();
+            prepareMemoData(token);
+        } else {
+//            Toast.makeText(getContext(), "disconnect", Toast.LENGTH_SHORT).show();
+            loadFromDatabase();
+        }
     }
 
     private boolean isConnected() {
@@ -272,5 +291,18 @@ public class HomeFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        init(token);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        init(token);
     }
 }

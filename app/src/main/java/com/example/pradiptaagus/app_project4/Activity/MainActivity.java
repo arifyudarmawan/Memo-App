@@ -20,7 +20,6 @@ import com.example.pradiptaagus.app_project4.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Fragment fragment;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;

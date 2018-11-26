@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telecom.Call;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +23,7 @@ import com.example.pradiptaagus.app_project4.R;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdateMemoActivity extends AppCompatActivity implements View.OnClickListener {
+public class UpdateMemoActivity extends AppCompatActivity {
     private EditText etMemoTitle;
     private EditText etMemoDetail;
     private String title;
@@ -40,7 +42,7 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("Update Memo");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         // handling toolbar menu on click
@@ -65,12 +67,6 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
         // get user input
         etMemoTitle = findViewById(R.id.et_memo_title);
         etMemoDetail = findViewById(R.id.et_memo_detail);
-
-        btnSave = findViewById(R.id.btn_save);
-        btnSave.setOnClickListener(this);
-
-        btnDiscard = findViewById(R.id.btn_discard);
-        btnDiscard.setOnClickListener(this);
 
         if (token == "missing") {
             loginActivity();
@@ -100,17 +96,6 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_save:
-                updateMemo(token, memoId, userId);
-                break;
-            case R.id.btn_discard:
-                finish();
-        }
-    }
-
     private void updateMemo(String token, int memoId, int userId) {
         // get user input
         title = etMemoTitle.getText().toString();
@@ -130,5 +115,21 @@ public class UpdateMemoActivity extends AppCompatActivity implements View.OnClic
                 Toast.makeText(UpdateMemoActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.create_memo_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.save:
+                updateMemo(token, memoId, userId);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

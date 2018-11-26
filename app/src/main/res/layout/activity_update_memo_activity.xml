@@ -22,13 +22,6 @@
         android:paddingRight="16dp">
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_margin"
-            android:text="Update Memo"
-            android:textSize="@dimen/login_title_size" />
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,30 +49,4 @@
                 android:scrollbars="vertical" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/layout_padding">
-
-        <Button
-            android:id="@+id/btn_discard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/discard"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/btn_save"
-            android:theme="@style/SecondaryButton"/>
-
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:layout_gravity="right"
-            android:layout_alignParentRight="true"
-            android:theme="@style/PrimaryButton"/>
-
-    </RelativeLayout>
-
 </LinearLayout>
