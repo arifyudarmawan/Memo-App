@@ -70,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
                     signUp(name, email, password);
 
                 } else if (confirm_password != password){
-                    Toast.makeText(getApplicationContext(), "Confirm password doesnt match to password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Confirm password doesn't match to password", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<SignUpResponse> call, Throwable t) {
                         progresDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "1Connection error", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

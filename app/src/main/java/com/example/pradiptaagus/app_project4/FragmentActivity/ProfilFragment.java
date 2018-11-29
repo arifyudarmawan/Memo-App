@@ -4,9 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,6 +44,12 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
 
     public static ProfilFragment newInstance() {
         return new ProfilFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
 
@@ -128,6 +138,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
 
                 //go to login activity
                 startActivity(new Intent(getContext(), LoginActivity.class));
+                getActivity().finish();
             }
 
             @Override
@@ -136,5 +147,19 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profil_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

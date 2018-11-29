@@ -1,12 +1,14 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.R;
@@ -138,29 +141,6 @@ public class DetailActivity extends AppCompatActivity {
         return status;
     }
 
-//    private void getMemoData(int memoId, String token) {
-//        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-//        retrofit2.Call<GetMemoByIdResponse> call = apiInterface.getMemoById(memoId, token);
-//        call.enqueue(new Callback<GetMemoByIdResponse>() {
-//            @Override
-//            public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
-//                title = response.body().getTitle();
-//                detail = response.body().getDetail();
-//                date = (String) response.body().getCreatedAt();
-//
-//                tvTitle.setText(title);
-//                tvDetail.setText(detail);
-//                tvDate.setText("Modified: " + formatDate(date));
-//
-//            }
-//
-//            @Override
-//            public void onFailure(retrofit2.Call<GetMemoByIdResponse> call, Throwable t) {
-//                Toast.makeText(DetailActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
     private String formatDate(String updateAt) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -187,7 +167,67 @@ public class DetailActivity extends AppCompatActivity {
                 intent.putExtra("memo_id", memoId);
                 startActivity(intent);
                 finish();
+                return true;
+
+            case R.id.delete:
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                alertDialog.setMessage("Are you sure want to delete this memo?");
+                alertDialog.setCancelable(true);
+                alertDialog.setNegativeButton(
+                        "no",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        }
+                );
+                alertDialog.setPositiveButton(
+                        "yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+//                                deleteMemo(memoId);
+                            }
+                        }
+                );
+                alertDialog.create().show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteMemo(final int memoId) {
+        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        retrofit2.Call<DeleteMemoResponse> call = apiInterface.deleteMemo(memoId, token);
+        call.enqueue(new Callback<DeleteMemoResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<DeleteMemoResponse> call, Response<DeleteMemoResponse> response) {
+                if (response.body().isStatus()) {
+                    Toast.makeText(DetailActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Log.d("Tag", "error");
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<DeleteMemoResponse> call, Throwable t) {
+                Log.d("Tag", "error", t);
+                Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    //remove item on SQLite
+    private void deleteLocalMemo(int memo_id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = "id = ?";
+        String[] selectionArgs = {String.valueOf(memo_id)};
+        int result = db.delete("memos", selection, selectionArgs);
+        Toast.makeText(this, ""+result, Toast.LENGTH_SHORT).show();
     }
 }

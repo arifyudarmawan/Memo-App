@@ -127,35 +127,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             intent.putExtra("memo_id", memo.getId());
                             startActivity(intent);
                         } else if (which == 2) {
-                            removeRecyclerViewItem(position, memo.getId(), token);
-                            Toast.makeText(getContext(), "Delete " +memo.getTitle(), Toast.LENGTH_SHORT).show();
+                            showDeleteDialog(position, memo.getId(), token);
+//                            removeRecyclerViewItem(position, memo.getId(), token);
+//                            Toast.makeText(getContext(), "Delete " +memo.getTitle(), Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    private void removeRecyclerViewItem(int position, int memo_id, String token) {
-                        memoList.remove(position);
-                        adapter.notifyItemRemoved(position);
-                        adapter.notifyItemRangeChanged(position, memoList.size());
-
-                        // remove item on database
-                        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-                        Call<DeleteMemoResponse> call = apiInterface.deleteMemo(memo_id, token);
-                        call.enqueue(new Callback<DeleteMemoResponse>() {
-                            @Override
-                            public void onResponse(Call<DeleteMemoResponse> call, Response<DeleteMemoResponse> response) {
-                                if (response.body().isStatus()) {
-                                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.d("Tag", "error");
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<DeleteMemoResponse> call, Throwable t) {
-                                Log.d("Tag", "error", t);
-                                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
-                            }
-                        });
                     }
                 });
                 alertDialog.create().show();
@@ -164,12 +139,70 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return view;
     }
 
+    private void removeRecyclerViewItem(int position, final int memo_id, String token) {
+        memoList.remove(position);
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position, memoList.size());
+
+        // remove item on database
+        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<DeleteMemoResponse> call = apiInterface.deleteMemo(memo_id, token);
+        call.enqueue(new Callback<DeleteMemoResponse>() {
+            @Override
+            public void onResponse(Call<DeleteMemoResponse> call, Response<DeleteMemoResponse> response) {
+                if (response.body().isStatus()) {
+                    deleteLocalMemo(memo_id);
+                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("Tag", "error");
+                }
+            }
+
+            //remove item on SQLite
+            private void deleteLocalMemo(int memo_id) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                String selection = "id = ?";
+                String[] selectionArgs = {String.valueOf(memo_id)};
+                db.delete("memos", selection, selectionArgs);
+            }
+
+            @Override
+            public void onFailure(Call<DeleteMemoResponse> call, Throwable t) {
+                Log.d("Tag", "error", t);
+                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showDeleteDialog(final int position, final int memo_id, final String token) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        alertDialog.setMessage("Are you sure want to delete this memo?");
+        alertDialog.setCancelable(true);
+        alertDialog.setNegativeButton(
+                "no",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                }
+        );
+        alertDialog.setPositiveButton(
+                "yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeRecyclerViewItem(position, memo_id, token);
+                    }
+                }
+        );
+        alertDialog.create().show();
+    }
+
     private void init(String token) {
         if (this.isConnected()) {
-            Toast.makeText(getContext(), "connect", Toast.LENGTH_SHORT).show();
             prepareMemoData(token);
         } else {
-            Toast.makeText(getContext(), "disconnect", Toast.LENGTH_SHORT).show();
             loadFromDatabase();
         }
     }
@@ -233,6 +266,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 //                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void deleteAllLocalMemo() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("memos", null, null);
     }
 
     private void loadFromDatabase() {

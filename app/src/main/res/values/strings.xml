@@ -17,4 +17,6 @@
     <string name="dont_have_an_account">Dont have an account?</string>
     <string name="modified">Modified:</string>
     <string name="date_dumy">2018-11-10</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>
