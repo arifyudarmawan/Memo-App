@@ -1,10 +1,12 @@
 package com.example.pradiptaagus.app_project4.Api;
 
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
+import com.example.pradiptaagus.app_project4.Model.FriendsResponse;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
 import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoResponse;
+import com.example.pradiptaagus.app_project4.Model.SearchUserResponse;
 import com.example.pradiptaagus.app_project4.Model.StoreMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.SignUpResponse;
 import com.example.pradiptaagus.app_project4.Model.UpdateMemoResponse;
@@ -83,6 +85,18 @@ public interface ApiInterface {
     @DELETE("memo/{memo_id}")
     Call<DeleteMemoResponse> deleteMemo(
             @Path("memo_id") int memo_id,
+            @Query("token") String token
+    );
+
+    @GET("user/{user_email}")
+    Call<SearchUserResponse> findUser(
+            @Path("user_email") String user_email,
+            @Query("token") String token
+    );
+
+    @GET("friends/{user_id}")
+    Call<FriendsResponse> getAllFriend(
+            @Path("user_id") int user_id,
             @Query("token") String token
     );
 }

@@ -14,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Activity.LoginActivity;
+import com.example.pradiptaagus.app_project4.Activity.SearchFriendActivity;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
 import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
@@ -41,6 +43,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     private Button btnLogout;
     ApiInterface apiInterface;
     ProgressDialog progressDialog;
+    SharedPreferences getUserPreference;
 
     public static ProfilFragment newInstance() {
         return new ProfilFragment();
@@ -81,9 +84,18 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         }
 
         // retrieve data from api
-        getUserData(token);
+        if (id == 0 || name == "missing" || email == "missing" || token == "missing") {
+            getUserData(token);
+        } else {
+            loadFromSharedPreference();
+        }
 
         return view;
+    }
+
+    private void loadFromSharedPreference() {
+        tvName.setText(name);
+        tvEmail.setText(email);
     }
 
     private void getUserData(String token) {
@@ -150,7 +162,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profil_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -158,7 +170,8 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.add_friend:
+                startActivity(new Intent(getContext(), SearchFriendActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

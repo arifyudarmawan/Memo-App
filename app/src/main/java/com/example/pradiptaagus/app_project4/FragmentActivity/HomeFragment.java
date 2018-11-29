@@ -323,9 +323,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.new_memo:
-                startActivity(new Intent(getContext(), AddMemoActivity.class));
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

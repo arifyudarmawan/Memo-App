@@ -7,10 +7,4 @@
         android:title="Search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
-
-    <item
-        android:id="@+id/new_memo"
-        android:title="New memo"
-        app:showAsAction="never"/>
-
 </menu>

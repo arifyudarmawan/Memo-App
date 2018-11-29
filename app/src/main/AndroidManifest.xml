@@ -32,7 +32,8 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".Activity.UpdateMemoActivity" />
-        <activity android:name=".Activity.DetailActivity"></activity>
+        <activity android:name=".Activity.DetailActivity" />
+        <activity android:name=".Activity.SearchFriendActivity"></activity>
     </application>
 
 </manifest>

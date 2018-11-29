@@ -33,6 +33,7 @@ public class AddMemoActivity extends AppCompatActivity {
     private String token;
     private int userId;
     private ApiInterface apiInterface;
+    SharedPreferences userPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class AddMemoActivity extends AppCompatActivity {
         });
 
         // declare share preference
-        final SharedPreferences userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
+        userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
 
         // get token from shared preference
         token = userPreference.getString("token", "missing");
