@@ -2,7 +2,6 @@ package com.example.pradiptaagus.app_project4.Adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     @Override
     public MemoViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_recycler_view, viewGroup, false);
+                .inflate(R.layout.memo_item_recycler_view, viewGroup, false);
         return new MemoViewHolder(itemView);
     }
 

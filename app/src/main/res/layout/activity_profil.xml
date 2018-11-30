@@ -1,60 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentActivity.ProfilFragment"
     android:orientation="vertical">
-
     <RelativeLayout
         android:id="@+id/cv_profil"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_profil"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_account_circle_white_150dp" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_below="@+id/iv_profil"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:orientation="vertical"
-            android:paddingTop="45dp"
-            android:paddingBottom="45dp">
+            android:layout_centerHorizontal="true"
+            android:text="UserName"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_account_circle_white_24dp" />
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_below="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="user@mail.com"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"/>
 
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:text="UserName"
-                android:textColor="@color/white"
-                android:textSize="21sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="user@mail.com"
-                android:textSize="16sp"
-                android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"/>
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_exit_to_app_white_24dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"/>
     </RelativeLayout>
-
-    <Button
-        android:layout_below="@id/cv_profil"
-        android:id="@+id/btn_logout"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log out"
-        android:layout_centerHorizontal="true"
-        android:theme="@style/PrimaryButton"
-        android:layout_marginTop="16dp"/>
-</RelativeLayout>
+        android:text="Friends"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:padding="8dp"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friend_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:clipToPadding="false"/>
+</LinearLayout>

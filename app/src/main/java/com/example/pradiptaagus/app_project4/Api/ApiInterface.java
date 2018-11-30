@@ -1,7 +1,8 @@
 package com.example.pradiptaagus.app_project4.Api;
 
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
-import com.example.pradiptaagus.app_project4.Model.FriendsResponse;
+import com.example.pradiptaagus.app_project4.Model.FriendItemResponse;
+import com.example.pradiptaagus.app_project4.Model.FriendResponse;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
 import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
@@ -17,7 +18,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -95,7 +95,7 @@ public interface ApiInterface {
     );
 
     @GET("friends/{user_id}")
-    Call<FriendsResponse> getAllFriend(
+    Call<FriendResponse> getAllFriend(
             @Path("user_id") int user_id,
             @Query("token") String token
     );

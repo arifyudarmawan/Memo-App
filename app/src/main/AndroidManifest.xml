@@ -33,7 +33,8 @@
         </activity>
         <activity android:name=".Activity.UpdateMemoActivity" />
         <activity android:name=".Activity.DetailActivity" />
-        <activity android:name=".Activity.SearchFriendActivity"></activity>
+        <activity android:name=".Activity.SearchFriendActivity" />
+        <activity android:name=".friend_item_recycler_view"></activity>
     </application>
 
 </manifest>

@@ -22,6 +22,12 @@ public class DBHelper extends SQLiteOpenHelper {
         "updated_at TEXT" +
     ")";
 
+    private static final String CREATE_TABLE_FRIEND = "CREATE TABLE friends(" +
+        "id INTEGER PRIMARY KEY, " +
+        "name TEXT," +
+        "email TEXT" +
+    ")";
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -30,6 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_MEMO);
+        db.execSQL(CREATE_TABLE_FRIEND);
     }
 
     @Override
