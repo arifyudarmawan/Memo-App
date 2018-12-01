@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +42,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.support.v7.widget.LinearLayoutManager.*;
-
 public class ProfilFragment extends Fragment implements View.OnClickListener{
     private SharedPreferences userPreference;
     private String name;
@@ -59,6 +57,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     private List<FriendItemResponse> friendList = new ArrayList<>();
     private FriendAdapter adapter;
     private DBHelper dbHelper;
+    private ProgressBar progressBar;
 
     public static ProfilFragment newInstance() {
         return new ProfilFragment();
@@ -87,6 +86,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         tvEmail = view.findViewById(R.id.tv_email);
         ivLogout = view.findViewById(R.id.iv_logout);
         ivLogout.setOnClickListener(this);
+        progressBar = view.findViewById(R.id.pb_load_friend);
 
         // progress dialog
         progressDialog = new ProgressDialog(getContext());
@@ -125,6 +125,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         call.enqueue(new Callback<FriendResponse>() {
             @Override
             public void onResponse(Call<FriendResponse> call, Response<FriendResponse> response) {
+                progressBar.setVisibility(View.GONE);
                 // get all response from api
                 friendList.addAll(response.body().getData());
                 adapter = new FriendAdapter(friendList);

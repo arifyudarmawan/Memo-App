@@ -59,6 +59,11 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:padding="8dp"/>
+    <ProgressBar
+        android:id="@+id/pb_load_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/friend_recycler_view"
         android:layout_width="match_parent"
