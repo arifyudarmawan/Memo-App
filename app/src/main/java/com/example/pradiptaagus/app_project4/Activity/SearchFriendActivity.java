@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Model.AddFriendResponse;
 import com.example.pradiptaagus.app_project4.Model.SearchUserResponse;
 import com.example.pradiptaagus.app_project4.Model.UserResponse;
 import com.example.pradiptaagus.app_project4.R;
@@ -28,11 +29,12 @@ import retrofit2.Response;
 public class SearchFriendActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText etKeyWord;
-    private Button btnSearch;
+    private Button btnSearch, btnAdd;
     private ImageView ivHide;
     private ProgressDialog progressDialog;
     private SharedPreferences userPreferences;
     private String token;
+    private int userId, friendId;
     private TextView tvUsername, tvEmail, tvNotFound;
     private RelativeLayout profil;
 
@@ -57,6 +59,8 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
         etKeyWord = findViewById(R.id.et_keyword);
         btnSearch = findViewById(R.id.btn_search);
         btnSearch.setOnClickListener(this);
+        btnAdd = findViewById(R.id.btn_add_friend);
+        btnAdd.setOnClickListener(this);
         tvUsername = findViewById(R.id.tv_username);
         tvEmail = findViewById(R.id.tv_email);
         ivHide = findViewById(R.id.iv_hide);
@@ -68,6 +72,7 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
 
         // get token fro shared preference
         token = userPreferences.getString("token", "missing");
+        userId = userPreferences.getInt("userId", 0);
 
         // initiate progress dialog
         progressDialog = new ProgressDialog(this);
@@ -82,6 +87,9 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.iv_hide:
                 hide();
+                break;
+            case R.id.btn_add_friend:
+                addFriend(token, userId, friendId);
                 break;
         }
     }
@@ -104,6 +112,7 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onResponse(retrofit2.Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
                 if (response.body().getEmail() != null) {
+                    friendId = response.body().getId();
                     tvUsername.setText(response.body().getName());
                     tvEmail.setText(response.body().getEmail());
                     profil.setVisibility(View.VISIBLE);
@@ -117,6 +126,23 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFailure(retrofit2.Call<SearchUserResponse> call, Throwable t) {
                 Toast.makeText(SearchFriendActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addFriend(String token, int userId, int friendId) {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        retrofit2.Call<AddFriendResponse> call = apiInterface.addFriend(token, userId, friendId);
+        call.enqueue(new Callback<AddFriendResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<AddFriendResponse> call, Response<AddFriendResponse> response) {
+                Toast.makeText(SearchFriendActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                btnAdd.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<AddFriendResponse> call, Throwable t) {
+
             }
         });
     }

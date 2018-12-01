@@ -1,5 +1,6 @@
 package com.example.pradiptaagus.app_project4.Api;
 
+import com.example.pradiptaagus.app_project4.Model.AddFriendResponse;
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.FriendItemResponse;
 import com.example.pradiptaagus.app_project4.Model.FriendResponse;
@@ -98,5 +99,13 @@ public interface ApiInterface {
     Call<FriendResponse> getAllFriend(
             @Path("user_id") int user_id,
             @Query("token") String token
+    );
+
+    @FormUrlEncoded
+    @POST("friend")
+    Call<AddFriendResponse> addFriend(
+            @Query("token") String token,
+            @Field("user_id") int user_id,
+            @Field("friend_id") int friend_id
     );
 }

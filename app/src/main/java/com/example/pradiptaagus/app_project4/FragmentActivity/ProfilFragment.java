@@ -100,8 +100,6 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        // insert data to recyclerview
-        init();
 
         // set data to element
         if (id != 0 || name != "missing" || email != "missing") {
@@ -116,6 +114,9 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
             loadFromSharedPreference();
         }
 
+        // insert data to recyclerview
+        init();
+
         return view;
     }
 
@@ -125,12 +126,19 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         call.enqueue(new Callback<FriendResponse>() {
             @Override
             public void onResponse(Call<FriendResponse> call, Response<FriendResponse> response) {
-                progressBar.setVisibility(View.GONE);
-                // get all response from api
-                friendList.addAll(response.body().getData());
-                adapter = new FriendAdapter(friendList);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(adapter);
+                if (response.body() != null) {
+                    Toast.makeText(getContext(), ""+response.body().getData(), Toast.LENGTH_SHORT).show();
+                    // get all response from api
+                    friendList.addAll(response.body().getData());
+                    adapter = new FriendAdapter(friendList);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setAdapter(adapter);
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Load friends success", Toast.LENGTH_SHORT).show();
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Failed to load friend list", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -159,6 +167,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     private void loadFromSharedPreference() {
         tvName.setText(name);
         tvEmail.setText(email);
+        Toast.makeText(getContext(), "Load from sharedpreference", Toast.LENGTH_SHORT).show();
     }
 
     private void getUserData(String token) {
@@ -168,6 +177,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 id = response.body().getId();
+                Toast.makeText(getContext(), ""+id, Toast.LENGTH_SHORT).show();
                 name = response.body().getName();
                 email = response.body().getEmail();
                 tvName.setText(name);
@@ -179,6 +189,8 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
                 editor.putString("userName", name);
                 editor.putString("userEmail", email);
                 editor.apply();
+
+                Toast.makeText(getContext(), "Load from server", Toast.LENGTH_SHORT).show();
             }
 
             @Override
