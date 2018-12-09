@@ -8,17 +8,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.telecom.Call;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +25,12 @@ import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiInterface;
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
-import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.R;
 import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.zip.Inflater;
 
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,14 +39,13 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvTitle;
     private TextView tvDetail;
     private TextView tvDate;
-    private String title;
-    private String detail;
     private String token;
     private String date;
     private int userId;
     private int memoId;
     private ApiInterface apiInterface;
     DBHelper dbHelper;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +63,7 @@ public class DetailActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.tv_memo_title);
         tvDetail = findViewById(R.id.tv_memo_detail);
         tvDate = findViewById(R.id.tv_memo_date);
+        progressBar = findViewById(R.id.pb_load_memo);
 
         dbHelper = new DBHelper(this);
 
@@ -92,7 +89,35 @@ public class DetailActivity extends AppCompatActivity {
             finish();
         }
 
-        loadFromDatabase(memoId);
+        init();
+    }
+
+    private void init() {
+        if (isConnected()) {
+            loadFromServer(memoId);
+        } else {
+            loadFromDatabase(memoId);
+        }
+    }
+
+    private void loadFromServer(int memoId) {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        retrofit2.Call<GetMemoByIdResponse> call = apiInterface.getMemoById(memoId, token);
+        call.enqueue(new Callback<GetMemoByIdResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
+                tvTitle.setText(response.body().getTitle());
+                tvDetail.setText(response.body().getDetail());
+                tvDate.setText((String) response.body().getUpdatedAt());
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<GetMemoByIdResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Failed to load memo!", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void loadFromDatabase(int memoId) {

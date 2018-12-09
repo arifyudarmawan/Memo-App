@@ -3,6 +3,7 @@ package com.example.pradiptaagus.app_project4.Api;
 import com.example.pradiptaagus.app_project4.Model.AddFriendResponse;
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.FriendItemResponse;
+import com.example.pradiptaagus.app_project4.Model.FriendNumberResponse;
 import com.example.pradiptaagus.app_project4.Model.FriendResponse;
 import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
@@ -40,8 +41,9 @@ public interface ApiInterface {
             @Field("password") String password
     );
 
-    @GET("memo")
+    @GET("all_memo/{user_id}")
     Call<MemoResponse> getAllMemo(
+            @Path("user_id") int user_id,
             @Query("token") String token
     );
 
@@ -66,7 +68,6 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-//    @Headers("application/x-www-form-urlencoded")
     @PUT("memo/{memo_id}")
     Call<UpdateMemoResponse> updateMemo(
             @Path("memo_id") int memo_id,
@@ -77,7 +78,7 @@ public interface ApiInterface {
     );
 
 
-    @GET("getMemoById/{memo_id}")
+    @GET("get_memo_by_id/{memo_id}")
     Call<GetMemoByIdResponse> getMemoById(
             @Path("memo_id") int memo_id,
             @Query("token") String token
@@ -107,5 +108,11 @@ public interface ApiInterface {
             @Query("token") String token,
             @Field("user_id") int user_id,
             @Field("friend_id") int friend_id
+    );
+
+    @GET("number_of_friend/{user_id}")
+    Call<FriendNumberResponse> friendNumber(
+            @Path("user_id") int user_id,
+            @Query("token") String token
     );
 }

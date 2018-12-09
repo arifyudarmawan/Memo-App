@@ -4,14 +4,12 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,8 +26,6 @@ public class AddMemoActivity extends AppCompatActivity {
     private EditText etMemoDetail;
     private String title;
     private String detail;
-    private Button btnSave;
-    private Button btnDiscard;
     private String token;
     private int userId;
     private ApiInterface apiInterface;
@@ -37,6 +33,10 @@ public class AddMemoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (token == "missing") {
+            loginActivity();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_memo);
 
@@ -63,10 +63,6 @@ public class AddMemoActivity extends AppCompatActivity {
         // get user input
         etMemoTitle = findViewById(R.id.et_memo_title);
         etMemoDetail = findViewById(R.id.et_memo_detail);
-
-        if (token == "missing") {
-            loginActivity();
-        }
     }
 
     private void loginActivity() {
@@ -108,6 +104,7 @@ public class AddMemoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.save:
                 storeMemo(token);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

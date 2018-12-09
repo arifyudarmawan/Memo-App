@@ -4,18 +4,16 @@ package com.example.pradiptaagus.app_project4.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.View;
 
 import com.example.pradiptaagus.app_project4.Adapter.ViewPagerAdapter;
-import com.example.pradiptaagus.app_project4.FragmentActivity.HomeFragment;
-import com.example.pradiptaagus.app_project4.FragmentActivity.PageFragment;
-import com.example.pradiptaagus.app_project4.FragmentActivity.ProfilFragment;
+import com.example.pradiptaagus.app_project4.Fragment.HomeFragment;
+import com.example.pradiptaagus.app_project4.Fragment.PageFragment;
+import com.example.pradiptaagus.app_project4.Fragment.ProfilFragment;
 import com.example.pradiptaagus.app_project4.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -90,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(ProfilFragment.newInstance(), "Profil");
-        adapter.addFragment(HomeFragment.newInstance(), "Home");
-        adapter.addFragment(PageFragment.newInstance("Tiga"), "Tiga");
+        adapter.addFragment(HomeFragment.newInstance(), "My Memo");
+        adapter.addFragment(PageFragment.newInstance("Collective Memo"), "Collective Memo");
         viewPager.setAdapter(adapter);
     }
 

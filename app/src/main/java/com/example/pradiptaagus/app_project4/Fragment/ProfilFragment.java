@@ -1,4 +1,4 @@
-package com.example.pradiptaagus.app_project4.FragmentActivity;
+package com.example.pradiptaagus.app_project4.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -101,40 +103,48 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
         // set data to element
         if (id != 0 || name != "missing" || email != "missing") {
             tvName.setText(name);
             tvEmail.setText(email);
         }
 
-        // retrieve data from api
-        if (id == 0 || name == "missing" || email == "missing" || token == "missing") {
+        // load data
+        init(id, token);
+    }
+
+    private void init(int id, String token) {
+        if (this.isConnected()) {
             getUserData(token);
         } else {
             loadFromSharedPreference();
+            loadFromLocalDatabase();
         }
-
-        // insert data to recyclerview
-        init();
-
-        return view;
     }
 
-    private void init() {
+    private void loadFriend(int id, String token) {
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<FriendResponse> call = apiInterface.getAllFriend(id, token);
         call.enqueue(new Callback<FriendResponse>() {
             @Override
             public void onResponse(Call<FriendResponse> call, Response<FriendResponse> response) {
                 if (response.body() != null) {
-                    Toast.makeText(getContext(), ""+response.body().getData(), Toast.LENGTH_SHORT).show();
                     // get all response from api
+                    friendList.clear();
                     friendList.addAll(response.body().getData());
                     adapter = new FriendAdapter(friendList);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(getContext(), "Load friends success", Toast.LENGTH_SHORT).show();
+
+                    storeFriendToLocalDatabase();
                 } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Failed to load friend list", Toast.LENGTH_SHORT).show();
@@ -148,11 +158,11 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         });
     }
 
-    private void loadFromDatabase() {
+    private void loadFromLocalDatabase() {
 
     }
 
-    private void storeToLocalDatabase() {
+    private void storeFriendToLocalDatabase() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         for (int i = 0; i < friendList.size(); i++) {
@@ -170,14 +180,22 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         Toast.makeText(getContext(), "Load from sharedpreference", Toast.LENGTH_SHORT).show();
     }
 
-    private void getUserData(String token) {
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean status = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return status;
+    }
+
+    private void getUserData(final String token) {
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<UserResponse> call = apiInterface.getUser(token);
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 id = response.body().getId();
-                Toast.makeText(getContext(), ""+id, Toast.LENGTH_SHORT).show();
                 name = response.body().getName();
                 email = response.body().getEmail();
                 tvName.setText(name);
@@ -190,7 +208,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
                 editor.putString("userEmail", email);
                 editor.apply();
 
-                Toast.makeText(getContext(), "Load from server", Toast.LENGTH_SHORT).show();
+                loadFriend(id, token);
             }
 
             @Override

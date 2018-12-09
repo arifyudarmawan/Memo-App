@@ -1,4 +1,4 @@
-package com.example.pradiptaagus.app_project4.FragmentActivity;
+package com.example.pradiptaagus.app_project4.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

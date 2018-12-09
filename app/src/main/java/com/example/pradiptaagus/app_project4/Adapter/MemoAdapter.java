@@ -54,7 +54,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         }
         memoViewHolder.title.setText(title);
         memoViewHolder.detail.setText(detail);
-        memoViewHolder.date.setText(formatDate(memo.getUpdatedAt()));
+//        memoViewHolder.date.setText(formatDate(memo.getUpdatedAt()));
     }
 
     private String formatDate(String updatedAt) {
