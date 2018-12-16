@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "629252335584",
+    "firebase_url": "https://memo-app-47d07.firebaseio.com",
+    "project_id": "memo-app-47d07",
+    "storage_bucket": "memo-app-47d07.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629252335584:android:1b4fb7f95095075f",
+        "android_client_info": {
+          "package_name": "com.example.pradiptaagus.app_project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629252335584-qps94t7268vdn1poj4aqp9piucbl3led.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXT3PUo-SDGdMB7Sm3rJHYR0kxPz3MhV0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
