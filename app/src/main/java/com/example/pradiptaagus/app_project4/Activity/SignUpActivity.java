@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
-import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Api.ApiService;
 import com.example.pradiptaagus.app_project4.Model.SignUpResponse;
 import com.example.pradiptaagus.app_project4.R;
 
@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             private void signUp(String name, String email, String password) {
-                ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                ApiService apiInterface = ApiClient.getApiClient().create(ApiService.class);
                 Call<SignUpResponse> call = apiInterface.signup(name, email, password);
 
                 call.enqueue(new Callback<SignUpResponse>() {

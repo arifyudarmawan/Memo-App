@@ -2,7 +2,7 @@ package com.example.pradiptaagus.app_project4.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FriendItemResponse{
+public class RecipientItem{
 
 	@SerializedName("name")
 	private String name;
@@ -12,8 +12,6 @@ public class FriendItemResponse{
 
 	@SerializedName("email")
 	private String email;
-
-	private boolean isSelected;
 
 	public void setName(String name){
 		this.name = name;
@@ -39,18 +37,10 @@ public class FriendItemResponse{
 		return email;
 	}
 
-	public boolean isSelected() {
-		return isSelected;
-	}
-
-	public void setSelected(boolean selected) {
-		isSelected = selected;
-	}
-
 	@Override
  	public String toString(){
 		return 
-			"FriendItemResponse{" + 
+			"RecipientItem{" + 
 			"name = '" + name + '\'' + 
 			",id = '" + id + '\'' + 
 			",email = '" + email + '\'' + 

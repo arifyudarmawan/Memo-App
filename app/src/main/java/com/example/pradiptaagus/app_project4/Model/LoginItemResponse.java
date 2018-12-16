@@ -2,10 +2,16 @@ package com.example.pradiptaagus.app_project4.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FriendItemResponse{
+public class LoginItemResponse {
+
+	@SerializedName("updated_at")
+	private String updatedAt;
 
 	@SerializedName("name")
 	private String name;
+
+	@SerializedName("created_at")
+	private String createdAt;
 
 	@SerializedName("id")
 	private int id;
@@ -13,7 +19,13 @@ public class FriendItemResponse{
 	@SerializedName("email")
 	private String email;
 
-	private boolean isSelected;
+	public void setUpdatedAt(String updatedAt){
+		this.updatedAt = updatedAt;
+	}
+
+	public String getUpdatedAt(){
+		return updatedAt;
+	}
 
 	public void setName(String name){
 		this.name = name;
@@ -21,6 +33,14 @@ public class FriendItemResponse{
 
 	public String getName(){
 		return name;
+	}
+
+	public void setCreatedAt(String createdAt){
+		this.createdAt = createdAt;
+	}
+
+	public String getCreatedAt(){
+		return createdAt;
 	}
 
 	public void setId(int id){
@@ -39,19 +59,13 @@ public class FriendItemResponse{
 		return email;
 	}
 
-	public boolean isSelected() {
-		return isSelected;
-	}
-
-	public void setSelected(boolean selected) {
-		isSelected = selected;
-	}
-
 	@Override
  	public String toString(){
 		return 
-			"FriendItemResponse{" + 
-			"name = '" + name + '\'' + 
+			"LoginItemResponse{" +
+			"updated_at = '" + updatedAt + '\'' + 
+			",name = '" + name + '\'' + 
+			",created_at = '" + createdAt + '\'' + 
 			",id = '" + id + '\'' + 
 			",email = '" + email + '\'' + 
 			"}";

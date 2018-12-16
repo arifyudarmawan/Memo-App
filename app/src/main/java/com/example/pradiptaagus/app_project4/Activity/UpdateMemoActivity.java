@@ -6,18 +6,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
-import com.example.pradiptaagus.app_project4.Api.ApiInterface;
-import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
+import com.example.pradiptaagus.app_project4.Api.ApiService;
+import com.example.pradiptaagus.app_project4.Model.ShowMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.UpdateMemoResponse;
 import com.example.pradiptaagus.app_project4.R;
 import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
@@ -33,16 +34,22 @@ public class UpdateMemoActivity extends AppCompatActivity {
     private EditText etMemoDetail;
     private String title;
     private String detail;
-    private Button btnSave;
-    private Button btnDiscard;
     private String token;
     private int userId;
     private int memoId;
-    private ApiInterface apiInterface;
-    DBHelper dbHelper;
+    private ApiService apiService;
+    private DBHelper dbHelper;
+    private SharedPreferences userPreference;
+    private ProgressBar progressBar;
+    private TextInputLayout layoutMemoTitle, layoutMemoDetail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (token == "missing") {
+            loginActivity();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_memo);
 
@@ -60,7 +67,7 @@ public class UpdateMemoActivity extends AppCompatActivity {
         });
 
         // declare share preference
-        final SharedPreferences userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
+        userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
 
         // get token from shared preference
         token = userPreference.getString("token", "missing");
@@ -72,29 +79,35 @@ public class UpdateMemoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         memoId = intent.getIntExtra("memo_id", 0);
 
+        // get recipient list
+
+
         // get user input
         etMemoTitle = findViewById(R.id.et_memo_title);
         etMemoDetail = findViewById(R.id.et_memo_detail);
-
-        if (token == "missing") {
-            loginActivity();
-        }
+        progressBar = findViewById(R.id.pb_load_memo);
+        layoutMemoTitle = findViewById(R.id.layout_memo_title);
+        layoutMemoDetail = findViewById(R.id.layout_memo_detail);
 
         getMemoData(token, memoId);
     }
 
     private void getMemoData(String token, int memoId) {
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        retrofit2.Call<GetMemoByIdResponse> call = apiInterface.getMemoById(memoId, token);
-        call.enqueue(new Callback<GetMemoByIdResponse>() {
+        apiService = ApiClient.getApiClient().create(ApiService.class);
+        retrofit2.Call<ShowMemoResponse> call = apiService.showMemo(memoId, token);
+        call.enqueue(new Callback<ShowMemoResponse>() {
             @Override
-            public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
-                etMemoTitle.setText(response.body().getTitle());
-                etMemoDetail.setText(response.body().getDetail());
+            public void onResponse(retrofit2.Call<ShowMemoResponse> call, Response<ShowMemoResponse> response) {
+                etMemoTitle.setText(response.body().getMemo().getTitle());
+                etMemoDetail.setText(response.body().getMemo().getDetail());
+                progressBar.setVisibility(View.GONE);
+
+                layoutMemoTitle.setVisibility(View.VISIBLE);
+                layoutMemoDetail.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onFailure(retrofit2.Call<GetMemoByIdResponse> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ShowMemoResponse> call, Throwable t) {
                 Toast.makeText(UpdateMemoActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
@@ -109,8 +122,8 @@ public class UpdateMemoActivity extends AppCompatActivity {
         title = etMemoTitle.getText().toString();
         detail = etMemoDetail.getText().toString();
 
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        retrofit2.Call<UpdateMemoResponse> call = apiInterface.updateMemo(memoId, token, title, detail, userId);
+        apiService = ApiClient.getApiClient().create(ApiService.class);
+        retrofit2.Call<UpdateMemoResponse> call = apiService.updateMemo(memoId, token, title, detail, userId);
         call.enqueue(new Callback<UpdateMemoResponse>() {
             @Override
             public void onResponse(retrofit2.Call<UpdateMemoResponse> call, Response<UpdateMemoResponse> response) {

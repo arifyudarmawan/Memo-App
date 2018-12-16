@@ -11,6 +11,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -21,40 +24,53 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pradiptaagus.app_project4.Adapter.FriendAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
-import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Api.ApiService;
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
-import com.example.pradiptaagus.app_project4.Model.GetMemoByIdResponse;
+import com.example.pradiptaagus.app_project4.Model.FriendItemResponse;
+import com.example.pradiptaagus.app_project4.Model.ShowMemoResponse;
 import com.example.pradiptaagus.app_project4.R;
 import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
-    private TextView tvTitle;
+    private TextView tvTitle, tvMemoDetail, tvRecipentTitle, tvDetailTitle;
     private TextView tvDetail;
     private TextView tvDate;
     private String token;
     private String date;
     private int userId;
     private int memoId;
-    private ApiInterface apiInterface;
+    private ApiService apiInterface;
     DBHelper dbHelper;
     private ProgressBar progressBar;
+    private List<FriendItemResponse> recipientList = new ArrayList<>();
+    private FriendAdapter recipientAdapter;
+    private RecyclerView recyclerView;
+    private FriendItemResponse recipient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_memo_detail);
 
         SharedPreferences userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
         token = userPreference.getString("token", "missing");
         userId = userPreference.getInt("memoId", 0);
+
+        if (token == "missing") {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         //get memo_id from previous activity
         Intent intent = getIntent();
@@ -64,6 +80,9 @@ public class DetailActivity extends AppCompatActivity {
         tvDetail = findViewById(R.id.tv_memo_detail);
         tvDate = findViewById(R.id.tv_memo_date);
         progressBar = findViewById(R.id.pb_load_memo);
+        tvMemoDetail = findViewById(R.id.tv_memo_detail);
+        tvRecipentTitle = findViewById(R.id.tv_recipient_title);
+        tvDetailTitle = findViewById(R.id.tv_memo_title_detail);
 
         dbHelper = new DBHelper(this);
 
@@ -84,10 +103,13 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        if (token == "missing") {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
+        // recyclerview
+        recyclerView = findViewById(R.id.recipient_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
 
         init();
     }
@@ -101,19 +123,43 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void loadFromServer(int memoId) {
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        retrofit2.Call<GetMemoByIdResponse> call = apiInterface.getMemoById(memoId, token);
-        call.enqueue(new Callback<GetMemoByIdResponse>() {
+        ApiService apiInterface = ApiClient.getApiClient().create(ApiService.class);
+        retrofit2.Call<ShowMemoResponse> call = apiInterface.showMemo(memoId, token);
+        call.enqueue(new Callback<ShowMemoResponse>() {
             @Override
-            public void onResponse(retrofit2.Call<GetMemoByIdResponse> call, Response<GetMemoByIdResponse> response) {
-                tvTitle.setText(response.body().getTitle());
-                tvDetail.setText(response.body().getDetail());
-                tvDate.setText((String) response.body().getUpdatedAt());
+            public void onResponse(retrofit2.Call<ShowMemoResponse> call, Response<ShowMemoResponse> response) {
+                tvTitle.setText(response.body().getMemo().getTitle());
+                tvDetail.setText(response.body().getMemo().getDetail());
+                tvDate.setText(response.body().getMemo().getUpdatedAt());
+
+                // add item to recyclerview
+
+                for (int i = 0; i < response.body().getRecipient().size(); i++) {
+                    recipient = new FriendItemResponse();
+                    recipient.setId(response.body().getRecipient().get(i).getId());
+                    recipient.setName(response.body().getRecipient().get(i).getName());
+                    recipient.setEmail(response.body().getRecipient().get(i).getEmail());
+
+                    recipientList.add(recipient);
+                    Log.d("TAG_TEST", "" + recipientList);
+                }
+
+                Log.d("ALL_TAG", "" + recipientList);
+
+                recipientAdapter = new FriendAdapter(recipientList);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(recipientAdapter);
+
+                tvMemoDetail.setVisibility(View.VISIBLE);
+                tvRecipentTitle.setVisibility(View.VISIBLE);
+                tvDetailTitle.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(retrofit2.Call<GetMemoByIdResponse> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ShowMemoResponse> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Failed to load memo!", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
             }
@@ -225,7 +271,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void deleteMemo(final int memoId) {
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getApiClient().create(ApiService.class);
         retrofit2.Call<DeleteMemoResponse> call = apiInterface.deleteMemo(memoId, token);
         call.enqueue(new Callback<DeleteMemoResponse>() {
             @Override

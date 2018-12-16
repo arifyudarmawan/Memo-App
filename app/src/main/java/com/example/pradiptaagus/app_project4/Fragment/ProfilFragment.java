@@ -29,11 +29,11 @@ import com.example.pradiptaagus.app_project4.Activity.LoginActivity;
 import com.example.pradiptaagus.app_project4.Activity.SearchFriendActivity;
 import com.example.pradiptaagus.app_project4.Adapter.FriendAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
-import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Api.ApiService;
 import com.example.pradiptaagus.app_project4.Model.FriendItemResponse;
+import com.example.pradiptaagus.app_project4.Model.FriendNumberResponse;
 import com.example.pradiptaagus.app_project4.Model.FriendResponse;
 import com.example.pradiptaagus.app_project4.Model.LogoutResponse;
-import com.example.pradiptaagus.app_project4.Model.UserResponse;
 import com.example.pradiptaagus.app_project4.R;
 import com.example.pradiptaagus.app_project4.SQLite.DBHelper;
 
@@ -52,8 +52,9 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     private String token;
     private TextView tvName;
     private TextView tvEmail;
+    private TextView tvNumberOfFriend;
     private ImageView ivLogout;
-    private ApiInterface apiInterface;
+    private ApiService apiInterface;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private List<FriendItemResponse> friendList = new ArrayList<>();
@@ -89,6 +90,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         ivLogout = view.findViewById(R.id.iv_logout);
         ivLogout.setOnClickListener(this);
         progressBar = view.findViewById(R.id.pb_load_friend);
+        tvNumberOfFriend = view.findViewById(R.id.tv_number_of_friend);
 
         // progress dialog
         progressDialog = new ProgressDialog(getContext());
@@ -122,15 +124,22 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
 
     private void init(int id, String token) {
         if (this.isConnected()) {
-            getUserData(token);
+            setProfil();
+            loadFriend(id, token);
+            numberOfFriend();
         } else {
             loadFromSharedPreference();
             loadFromLocalDatabase();
         }
     }
 
+    private void setProfil() {
+        tvName.setText(name);
+        tvEmail.setText(email);
+    }
+
     private void loadFriend(int id, String token) {
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getApiClient().create(ApiService.class);
         Call<FriendResponse> call = apiInterface.getAllFriend(id, token);
         call.enqueue(new Callback<FriendResponse>() {
             @Override
@@ -144,7 +153,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
                     recyclerView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
 
-                    storeFriendToLocalDatabase();
+//                    storeFriendToLocalDatabase();
                 } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Failed to load friend list", Toast.LENGTH_SHORT).show();
@@ -153,6 +162,23 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onFailure(Call<FriendResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void numberOfFriend() {
+        apiInterface = ApiClient.getApiClient().create(ApiService.class);
+        Call<FriendNumberResponse> call = apiInterface.numberOfFriend(id, token);
+        call.enqueue(new Callback<FriendNumberResponse>() {
+            @Override
+            public void onResponse(Call<FriendNumberResponse> call, Response<FriendNumberResponse> response) {
+                int friend = response.body().getFriend();
+                tvNumberOfFriend.setText("(" + Integer.toString(friend) + ")");
+            }
+
+            @Override
+            public void onFailure(Call<FriendNumberResponse> call, Throwable t) {
                 Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
@@ -189,35 +215,6 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         return status;
     }
 
-    private void getUserData(final String token) {
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<UserResponse> call = apiInterface.getUser(token);
-        call.enqueue(new Callback<UserResponse>() {
-            @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                id = response.body().getId();
-                name = response.body().getName();
-                email = response.body().getEmail();
-                tvName.setText(name);
-                tvEmail.setText(email);
-
-                //store user data to shared preference
-                SharedPreferences.Editor editor = userPreference.edit();
-                editor.putInt("userId", id);
-                editor.putString("userName", name);
-                editor.putString("userEmail", email);
-                editor.apply();
-
-                loadFriend(id, token);
-            }
-
-            @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -228,7 +225,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     }
 
     private void logout(String token) {
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getApiClient().create(ApiService.class);
         Call<LogoutResponse> call = apiInterface.logout(token);
         call.enqueue(new Callback<LogoutResponse>() {
             @Override
@@ -265,6 +262,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         switch (item.getItemId()) {
             case R.id.add_friend:
                 startActivity(new Intent(getContext(), SearchFriendActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

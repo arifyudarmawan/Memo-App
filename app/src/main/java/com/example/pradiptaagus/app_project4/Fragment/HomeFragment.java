@@ -10,12 +10,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +32,7 @@ import com.example.pradiptaagus.app_project4.Activity.DetailActivity;
 import com.example.pradiptaagus.app_project4.Activity.UpdateMemoActivity;
 import com.example.pradiptaagus.app_project4.Adapter.MemoAdapter;
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
-import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Api.ApiService;
 import com.example.pradiptaagus.app_project4.Model.DeleteMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 import com.example.pradiptaagus.app_project4.Model.MemoResponse;
@@ -53,7 +52,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private RecyclerView recyclerView;
     private MemoAdapter adapter;
     private MemoItemResponse memo;
-    private ApiInterface apiInterface;
+    private ApiService apiInterface;
     private String token;
     private int userId;
     DBHelper dbHelper;
@@ -100,8 +99,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Toast.makeText(getContext(), "onActivtyCreated", Toast.LENGTH_SHORT).show();
 
         swipeRefreshLayout.post(new Runnable() {
             @Override
@@ -165,7 +162,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         adapter.notifyItemRangeChanged(position, memoList.size());
 
         // remove item on database
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getApiClient().create(ApiService.class);
         Call<DeleteMemoResponse> call = apiInterface.deleteMemo(memo_id, token);
         call.enqueue(new Callback<DeleteMemoResponse>() {
             @Override
@@ -241,7 +238,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         userId = userPreference.getInt("userId", 0);
         token = userPreference.getString("token", "missing");
 
-        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getApiClient().create(ApiService.class);
         Call<MemoResponse> call = apiInterface.getAllMemo(userId, token);
         call.enqueue(new Callback<MemoResponse>() {
             @Override
@@ -251,8 +248,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 adapter = new MemoAdapter(memoList);
                 recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
-
-
             }
 
             @Override

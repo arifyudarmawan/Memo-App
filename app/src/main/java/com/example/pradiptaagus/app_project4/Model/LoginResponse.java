@@ -1,35 +1,63 @@
 package com.example.pradiptaagus.app_project4.Model;
 
-public class LoginResponse {
-    private String token;
-    private boolean status;
-    private String message;
+import com.google.gson.annotations.SerializedName;
 
-    // method getter and setter
+import java.util.List;
 
-    public String getToken() {
-        return token;
-    }
+public class LoginResponse{
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+	@SerializedName("message")
+	private String message;
 
-    public boolean isStatus() {
-        return status;
-    }
+	@SerializedName("account")
+	private List<LoginItemResponse> account;
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+	@SerializedName("token")
+	private String token;
 
-    public String getMessage() {
-        return message;
-    }
+	@SerializedName("status")
+	private boolean status;
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setMessage(String message){
+		this.message = message;
+	}
 
+	public String getMessage(){
+		return message;
+	}
 
+	public void setAccount(List<LoginItemResponse> account){
+		this.account = account;
+	}
+
+	public List<LoginItemResponse> getAccount(){
+		return account;
+	}
+
+	public void setToken(String token){
+		this.token = token;
+	}
+
+	public String getToken(){
+		return token;
+	}
+
+	public void setStatus(boolean status){
+		this.status = status;
+	}
+
+	public boolean isStatus(){
+		return status;
+	}
+
+	@Override
+ 	public String toString(){
+		return 
+			"LoginResponse{" + 
+			"message = '" + message + '\'' + 
+			",account = '" + account + '\'' + 
+			",token = '" + token + '\'' + 
+			",status = '" + status + '\'' + 
+			"}";
+		}
 }

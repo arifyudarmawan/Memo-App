@@ -2,7 +2,7 @@ package com.example.pradiptaagus.app_project4.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MemoItemResponse {
+public class Memo{
 
 	@SerializedName("updated_at")
 	private String updatedAt;
@@ -21,9 +21,6 @@ public class MemoItemResponse {
 
 	@SerializedName("title")
 	private String title;
-
-	@SerializedName("recipient")
-	private int recipient;
 
 	public void setUpdatedAt(String updatedAt){
 		this.updatedAt = updatedAt;
@@ -73,18 +70,10 @@ public class MemoItemResponse {
 		return title;
 	}
 
-	public int getRecipient() {
-		return recipient;
-	}
-
-	public void setRecipient(int recipient) {
-		this.recipient = recipient;
-	}
-
 	@Override
  	public String toString(){
 		return 
-			"MemoItemResponse{" +
+			"Memo{" + 
 			"updated_at = '" + updatedAt + '\'' + 
 			",user_id = '" + userId + '\'' + 
 			",created_at = '" + createdAt + '\'' + 
@@ -93,6 +82,4 @@ public class MemoItemResponse {
 			",title = '" + title + '\'' + 
 			"}";
 		}
-
-
 }

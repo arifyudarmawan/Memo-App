@@ -21,7 +21,10 @@
             android:textSize="14sp"
             android:padding="8dp"
             android:background="@drawable/bordered_edit_text"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:inputType="textEmailAddress"/>
         <Button
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
@@ -39,7 +42,6 @@
         android:layout_gravity="center_horizontal"/>
     <RelativeLayout
         android:id="@+id/profil"
-        android:visibility="invisible"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -50,7 +52,8 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_account_circle_black_80dp"/>
+            android:src="@drawable/ic_account_circle_black_80dp"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
@@ -58,7 +61,8 @@
             android:text="Username"
             android:textSize="16sp"
             android:layout_below="@+id/iv_user"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/tv_email"
             android:layout_width="wrap_content"
@@ -66,7 +70,8 @@
             android:text="user@mail.com"
             android:layout_below="@+id/tv_username"
             android:textSize="14sp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/btn_add_friend"
             android:layout_width="wrap_content"
@@ -74,13 +79,15 @@
             android:text="add friend"
             android:layout_below="@+id/tv_email"
             android:layout_centerHorizontal="true"
-            android:theme="@style/PrimaryButton"/>
+            android:theme="@style/PrimaryButton"
+            android:visibility="gone"/>
         <ImageView
             android:id="@+id/iv_hide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close_black_24dp"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true"
+            android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

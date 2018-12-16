@@ -19,13 +19,15 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     private List<MemoItemResponse> memoList;
 
     public class MemoViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, detail, date;
+        public TextView title, detail, date, recipient;
 
         public MemoViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.tv_memo_title);
             detail = view.findViewById(R.id.tv_memo_detail);
             date = view.findViewById(R.id.tv_memo_date);
+            recipient = view.findViewById(R.id.tv_recipient_number);
+
         }
     }
 
@@ -37,7 +39,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     @Override
     public MemoViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.memo_item_recycler_view, viewGroup, false);
+                .inflate(R.layout.activity_memo_item_recyclerview, viewGroup, false);
         return new MemoViewHolder(itemView);
     }
 
@@ -48,12 +50,21 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         if (title.length() >= 22) {
             title = title.substring(0,22).concat("...");
         }
+
         String detail = memo.getDetail();
         if (detail.length() >= 130) {
             detail = detail.substring(0, 130).concat("...");
         }
+
+        int recipient = memo.getRecipient();
+
         memoViewHolder.title.setText(title);
         memoViewHolder.detail.setText(detail);
+
+        if (recipient > 0) {
+            memoViewHolder.recipient.setText("(" + recipient + ")");
+        }
+
 //        memoViewHolder.date.setText(formatDate(memo.getUpdatedAt()));
     }
 

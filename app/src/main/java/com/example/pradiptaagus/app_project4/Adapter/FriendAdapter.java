@@ -37,7 +37,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendAdapter.FriendViewHolder friendViewHolder, int position) {
+    public void onBindViewHolder(@NonNull final FriendAdapter.FriendViewHolder friendViewHolder, int position) {
         FriendItemResponse friend = friendList.get(position);
         String username = friend.getName();
         String email = friend.getEmail();
@@ -50,6 +50,4 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public int getItemCount() {
         return friendList.size();
     }
-
-
 }

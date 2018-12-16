@@ -52,13 +52,30 @@
             android:paddingRight="8dp"
             android:paddingTop="8dp"/>
     </RelativeLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Friends"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:padding="8dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friends"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:padding="8dp"/>
+        <TextView
+            android:id="@+id/tv_number_of_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(0)"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:paddingLeft="2dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_toRightOf="@+id/tv_friend"/>
+    </RelativeLayout>
+
     <ProgressBar
         android:id="@+id/pb_load_friend"
         android:layout_width="wrap_content"
@@ -69,5 +86,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"/>
 </LinearLayout>

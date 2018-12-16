@@ -10,42 +10,99 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/pb_load_add_memo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
 
-            <EditText
-                android:id="@+id/et_memo_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Memo title"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
-
-
-
-        <android.support.design.widget.TextInputLayout
+        <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <EditText
-                android:id="@+id/et_memo_detail"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:hint="Memo detail..."
-                android:scrollbars="vertical" />
-        </android.support.design.widget.TextInputLayout>
-    </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_memo_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:text="Memo title"
+                    android:layout_marginBottom="4dp"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/et_memo_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Memo title"
+                    android:singleLine="true"
+                    android:background="@drawable/bordered_edit_text"
+                    android:textSize="18dp"
+                    android:padding="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_below="@+id/tv_memo_title"/>
+
+                <TextView
+                    android:id="@+id/tv_recipient_status_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recipient"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"
+                    android:layout_below="@+id/et_memo_title"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recipient_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scrollbars="vertical"
+                    android:clipToPadding="false"
+                    android:layout_marginBottom="12sp"
+                    android:layout_below="@+id/tv_recipient_status_title"/>
+
+                <TextView
+                    android:id="@+id/tv_memo_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Memo detail"
+                    android:layout_marginBottom="4dp"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/recipient_recycler_view"/>
+
+                <EditText
+                    android:id="@+id/et_memo_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="Memo detail..."
+                    android:scrollbars="vertical"
+                    android:background="@drawable/bordered_edit_text"
+                    android:textSize="18sp"
+                    android:minLines="5"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_below="@+id/tv_memo_detail"/>
+
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+
+
 </LinearLayout>

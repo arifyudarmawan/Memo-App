@@ -15,9 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pradiptaagus.app_project4.Api.ApiClient;
-import com.example.pradiptaagus.app_project4.Api.ApiInterface;
+import com.example.pradiptaagus.app_project4.Api.ApiService;
+import com.example.pradiptaagus.app_project4.Model.LoginItemResponse;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
 import com.example.pradiptaagus.app_project4.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,9 +32,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView tvSignup;
     private EditText etEmail;
     private EditText etPassword;
-    private ApiInterface apiInterface;
     private ProgressDialog progressDialog;
-
+    private List<LoginItemResponse> loginList = new ArrayList<>();
     private SharedPreferences userPreference;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -91,23 +94,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
 
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        ApiService apiInterface = ApiClient.getApiClient().create(ApiService.class);
         Call<LoginResponse> call = apiInterface.login(email, password);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.body().isStatus()) {
-                    progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                    loginList.addAll(response.body().getAccount());
+                    int id = loginList.get(0).getId();
+                    String username = loginList.get(0).getName();
+                    String email = loginList.get(0).getEmail();
+
 
                     // save token to shared preference
                     SharedPreferences.Editor editor = userPreference.edit();
                     editor.putString("token", response.body().getToken());
+                    editor.putInt("userId", id);
+                    editor.putString("userName", username);
+                    editor.putString("userEmail", email);
                     editor.apply();
 
+                    progressDialog.dismiss();
                     // go to home activity
                     MainActivity();
+                    Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
