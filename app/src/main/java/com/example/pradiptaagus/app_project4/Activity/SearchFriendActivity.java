@@ -1,15 +1,15 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,12 +29,12 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
     private EditText etKeyWord;
     private Button btnSearch, btnAdd;
     private ImageView ivHide, ivUser;
-    private ProgressDialog progressDialog;
     private SharedPreferences userPreferences;
-    private String token;
+    private String token, userEmail;
     private int userId, friendId;
     private TextView tvUsername, tvEmail, tvNotFound;
     private RelativeLayout profil;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,7 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
         ivHide.setOnClickListener(this);
         ivUser = findViewById(R.id.iv_user);
         tvNotFound = findViewById(R.id.tv_not_found);
+        progressBar = findViewById(R.id.pb_search_friend);
 
         //declare shared preference
         userPreferences = this.getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -72,10 +73,7 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
         // get token fro shared preference
         token = userPreferences.getString("token", "missing");
         userId = userPreferences.getInt("userId", 0);
-
-        // initiate progress dialog
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Searching...");
+        userEmail = userPreferences.getString("userEmail", "missing");
     }
 
     @Override
@@ -114,8 +112,7 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void search(final String token) {
-        progressDialog.show();
-
+        progressBar.setVisibility(View.VISIBLE);
         // hide element
         tvNotFound.setVisibility(View.GONE);
         hideElement();
@@ -138,8 +135,8 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
                     // check if user id friend or not
                     isFriend(keyWord, userId, token);
                 } else {
+                    progressBar.setVisibility(View.GONE);
                     tvNotFound.setVisibility(View.VISIBLE);
-                    progressDialog.dismiss();
                 }
             }
 
@@ -167,7 +164,7 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
-    private void isFriend(String email, int userId, String token) {
+    private void isFriend(final String email, int userId, String token) {
         ApiService apiInterface = ApiClient.getApiClient().create(ApiService.class);
         retrofit2.Call<IsFriendResponse> call = apiInterface.isFriend(email, userId, token);
         call.enqueue(new Callback<IsFriendResponse>() {
@@ -176,11 +173,16 @@ public class SearchFriendActivity extends AppCompatActivity implements View.OnCl
                 int result = response.body().getFriendId();
 
                 if (result == 0) {
-                    btnAdd.setVisibility(View.VISIBLE);
-                    progressDialog.dismiss();
+                    if (!email.equals(userEmail)) {
+                        btnAdd.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        btnAdd.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                    }
                 } else {
                     btnAdd.setVisibility(View.GONE);
-                    progressDialog.dismiss();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 

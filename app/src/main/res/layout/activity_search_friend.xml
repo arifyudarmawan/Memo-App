@@ -24,7 +24,8 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:maxLines="1"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress"
+            android:hint="examlple@mail.com"/>
         <Button
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
@@ -32,28 +33,37 @@
             android:text="search"
             android:theme="@style/PrimaryButton"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/tv_not_found"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User not found!"
-        android:textSize="16sp"
-        android:layout_gravity="center_horizontal"/>
     <RelativeLayout
         android:id="@+id/profil"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_margin="16dp">
+
+        <ProgressBar
+            android:id="@+id/pb_search_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tv_not_found"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User not found!"
+            android:textSize="16sp"
+            android:layout_centerHorizontal="true"/>
+
         <ImageView
             android:id="@+id/iv_user"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_account_circle_black_80dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_below="@+id/tv_not_found"/>
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
@@ -86,8 +96,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close_black_24dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_below="@id/tv_not_found"
+            android:layout_toRightOf="@+id/iv_user"/>
     </RelativeLayout>
 </LinearLayout>

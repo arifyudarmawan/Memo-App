@@ -161,17 +161,17 @@ public class AddMemoActivity extends AppCompatActivity {
         }
 
         if (recipientAdapter.checkedFriendList.size() > 0) {
-            Toast.makeText(this, "" + recipient_id, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "" + recipient_id, Toast.LENGTH_SHORT).show();
             storeMemoWithRecipient(title, detail, userId, token, recipient_id);
         } else {
-            Toast.makeText(this, "No recipient selected.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "No recipient selected.", Toast.LENGTH_SHORT).show();
             storeMemoWithoutRecipient(title, detail, userId, token);
         }
     }
 
     private void storeMemoWithRecipient(String title, String detail, int userId, String token, List<Integer> recipient_id) {
         apiService = ApiClient.getApiClient().create(ApiService.class);
-        Call<StoreMemoResponse> call = apiService.storeMemoWithRecipient(token, title,detail, userId, recipient_id);
+        Call<StoreMemoResponse> call = apiService.storeMemoWithRecipient(token, title, detail, userId, recipient_id);
         call.enqueue(new Callback<StoreMemoResponse>() {
             @Override
             public void onResponse(Call<StoreMemoResponse> call, Response<StoreMemoResponse> response) {

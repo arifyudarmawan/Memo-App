@@ -11,6 +11,7 @@ import com.example.pradiptaagus.app_project4.Model.MemoResponse;
 import com.example.pradiptaagus.app_project4.Model.SearchUserResponse;
 import com.example.pradiptaagus.app_project4.Model.ShowMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.SignUpResponse;
+import com.example.pradiptaagus.app_project4.Model.StoreFcmTokenResponse;
 import com.example.pradiptaagus.app_project4.Model.StoreMemoResponse;
 import com.example.pradiptaagus.app_project4.Model.UpdateMemoResponse;
 
@@ -127,5 +128,13 @@ public interface ApiService {
     Call<FriendNumberResponse> numberOfFriend(
             @Path("user_id") int user_id,
             @Query("token") String token
+    );
+
+    @FormUrlEncoded
+    @POST("store_fcm_token/{user_id}")
+    Call<StoreFcmTokenResponse> storeFcmToken(
+            @Path("user_id") int user_id,
+            @Query("token") String token,
+            @Field("fcm_token") String fcm_token
     );
 }

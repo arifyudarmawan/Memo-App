@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.example.pradiptaagus.app_project4.Api.ApiClient;
 import com.example.pradiptaagus.app_project4.Api.ApiService;
 import com.example.pradiptaagus.app_project4.Model.LoginItemResponse;
 import com.example.pradiptaagus.app_project4.Model.LoginResponse;
+import com.example.pradiptaagus.app_project4.Model.StoreFcmTokenResponse;
 import com.example.pradiptaagus.app_project4.R;
 
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etPassword;
     private ProgressDialog progressDialog;
     private List<LoginItemResponse> loginList = new ArrayList<>();
-    private SharedPreferences userPreference;
+    private SharedPreferences userPreference, firebasePreference;
+    private String token, fcmToken;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -57,18 +60,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // get token from shared preference
         userPreference = this.getSharedPreferences("user", Context.MODE_PRIVATE);
-        String token = userPreference.getString("token", "missing");
-
-        // check token
-        if (token != "missing") {
-            MainActivity();
-        }
-    }
-
-    // go to login activity method
-    private void MainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        firebasePreference = this.getSharedPreferences("fire_base", Context.MODE_PRIVATE);
+        fcmToken = firebasePreference.getString("fcm_token", "missing");
     }
 
     @Override
@@ -79,14 +72,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.tv_go_to_signup_view:
-                signup();
+                startActivity(new Intent(this, SignUpActivity.class));
                 break;
         }
-    }
-
-    // go to sign up method
-    private void signup() {
-        startActivity(new Intent(this, SignUpActivity.class));
     }
 
     private void login() {
@@ -106,19 +94,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     int id = loginList.get(0).getId();
                     String username = loginList.get(0).getName();
                     String email = loginList.get(0).getEmail();
+                    String token = response.body().getToken();
 
+                    // store fcm token
+                    storeFcmToken(id, token, fcmToken);
 
                     // save token to shared preference
                     SharedPreferences.Editor editor = userPreference.edit();
-                    editor.putString("token", response.body().getToken());
+                    editor.putString("token", token);
                     editor.putInt("userId", id);
                     editor.putString("userName", username);
                     editor.putString("userEmail", email);
                     editor.apply();
 
                     progressDialog.dismiss();
+
                     // go to home activity
-                    MainActivity();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     progressDialog.dismiss();
@@ -129,6 +122,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void storeFcmToken(int userId, String token, String fcmToken) {
+        ApiService apiService = ApiClient.getApiClient().create(ApiService.class);
+        Call<StoreFcmTokenResponse> call = apiService.storeFcmToken(userId, token, fcmToken);
+        call.enqueue(new Callback<StoreFcmTokenResponse>() {
+            @Override
+            public void onResponse(Call<StoreFcmTokenResponse> call, Response<StoreFcmTokenResponse> response) {
+                Log.d("RESPONSE ", "" + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<StoreFcmTokenResponse> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });

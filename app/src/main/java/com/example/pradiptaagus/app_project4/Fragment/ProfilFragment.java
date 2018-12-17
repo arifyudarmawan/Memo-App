@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfilFragment extends Fragment implements View.OnClickListener{
+public class ProfilFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private SharedPreferences userPreference;
     private String name;
     private String email;
@@ -61,6 +62,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
     private FriendAdapter adapter;
     private DBHelper dbHelper;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public static ProfilFragment newInstance() {
         return new ProfilFragment();
@@ -72,7 +74,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         setHasOptionsMenu(true);
     }
 
-
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_profil, container, false);
@@ -91,6 +93,8 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
         ivLogout.setOnClickListener(this);
         progressBar = view.findViewById(R.id.pb_load_friend);
         tvNumberOfFriend = view.findViewById(R.id.tv_number_of_friend);
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         // progress dialog
         progressDialog = new ProgressDialog(getContext());
@@ -265,5 +269,12 @@ public class ProfilFragment extends Fragment implements View.OnClickListener{
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        init(id, token);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
