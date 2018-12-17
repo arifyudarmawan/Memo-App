@@ -16,6 +16,7 @@ import android.view.View;
 import com.example.pradiptaagus.app_project4.Adapter.ViewPagerAdapter;
 import com.example.pradiptaagus.app_project4.Fragment.HomeFragment;
 import com.example.pradiptaagus.app_project4.Fragment.ProfilFragment;
+import com.example.pradiptaagus.app_project4.Fragment.SharedFragment;
 import com.example.pradiptaagus.app_project4.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         adapter.addFragment(ProfilFragment.newInstance(), "Profil");
         adapter.addFragment(HomeFragment.newInstance(), "My Memo");
-//        adapter.addFragment(PageFragment.newInstance("Collective Memo"), "Collective Memo");
+        adapter.addFragment(SharedFragment.newInstance(), "Friend's Memo");
         viewPager.setAdapter(adapter);
     }
 

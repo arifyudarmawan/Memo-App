@@ -137,4 +137,11 @@ public interface ApiService {
             @Query("token") String token,
             @Field("fcm_token") String fcm_token
     );
+
+
+    @GET("shared_memo/{user_id}")
+    Call<MemoResponse> getSharedMemo(
+            @Path("user_id") int user_id,
+            @Query("token") String token
+    );
 }

@@ -241,10 +241,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         call.enqueue(new Callback<MemoResponse>() {
             @Override
             public void onResponse(Call<MemoResponse> call, Response<MemoResponse> response) {
-                memoList.clear();
-                memoList.addAll(response.body().getData());
-                adapter = new MemoAdapter(memoList);
-                recyclerView.setAdapter(adapter);
+                if (response.body().isStatus()) {
+                    memoList.clear();
+                    memoList.addAll(response.body().getData());
+                    adapter = new MemoAdapter(memoList);
+                    recyclerView.setAdapter(adapter);
+                }
                 progressBar.setVisibility(View.GONE);
             }
 

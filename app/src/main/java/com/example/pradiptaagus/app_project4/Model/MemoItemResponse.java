@@ -25,6 +25,9 @@ public class MemoItemResponse {
 	@SerializedName("recipient")
 	private int recipient;
 
+	@SerializedName("name")
+	private String name;
+
 	public void setUpdatedAt(String updatedAt){
 		this.updatedAt = updatedAt;
 	}
@@ -81,6 +84,14 @@ public class MemoItemResponse {
 		this.recipient = recipient;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
  	public String toString(){
 		return 
@@ -92,7 +103,5 @@ public class MemoItemResponse {
 			",detail = '" + detail + '\'' + 
 			",title = '" + title + '\'' + 
 			"}";
-		}
-
-
+	}
 }
