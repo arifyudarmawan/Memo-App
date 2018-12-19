@@ -4,6 +4,16 @@ public class UpdateMemoResponse{
 	private UpdateMemoItemResponse updateMemoItemResponse;
 	private String message;
 
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	private boolean status;
+
 	public void setUpdateMemoItemResponse(UpdateMemoItemResponse updateMemoItemResponse){
 		this.updateMemoItemResponse = updateMemoItemResponse;
 	}

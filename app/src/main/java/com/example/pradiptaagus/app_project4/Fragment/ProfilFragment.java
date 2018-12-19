@@ -5,12 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -157,7 +158,8 @@ public class ProfilFragment extends Fragment implements View.OnClickListener, Sw
                     recyclerView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
 
-//                    storeFriendToLocalDatabase();
+                    deleteAllLocalMemo();
+                    storeFriendToLocalDatabase();
                 } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Failed to load friend list", Toast.LENGTH_SHORT).show();
@@ -189,7 +191,43 @@ public class ProfilFragment extends Fragment implements View.OnClickListener, Sw
     }
 
     private void loadFromLocalDatabase() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                "id",
+                "name",
+                "email",
+        };
+
+        Cursor cursor = db.query(
+                "friends",
+                projection,
+                null,
+                null,
+                null,
+                null,
+                "id DESC"
+        );
+
+        while (cursor.moveToNext()) {
+            FriendItemResponse friend = new FriendItemResponse();
+            friend.setId(cursor.getInt(0));
+            friend.setName(cursor.getString(1));
+            friend.setEmail(cursor.getString(2));
+
+            friendList.add(friend);
+        }
+        cursor.close();
+        adapter = new FriendAdapter(friendList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void deleteAllLocalMemo() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("friends", null, null);
     }
 
     private void storeFriendToLocalDatabase() {

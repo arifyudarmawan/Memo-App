@@ -1,5 +1,6 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,7 @@ public class AddMemoActivity extends AppCompatActivity {
     private List<Integer> recipient_id;
     private ScrollView scrollView;
     private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,9 @@ public class AddMemoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New Memo");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Creating memo...");
 
         // handling toolbar menu on click
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -91,8 +96,6 @@ public class AddMemoActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.pb_load_add_memo);
 
         init();
-
-
     }
 
     private void init() {
@@ -170,18 +173,25 @@ public class AddMemoActivity extends AppCompatActivity {
     }
 
     private void storeMemoWithRecipient(String title, String detail, int userId, String token, List<Integer> recipient_id) {
+        progressDialog.show();
         apiService = ApiClient.getApiClient().create(ApiService.class);
         Call<StoreMemoResponse> call = apiService.storeMemoWithRecipient(token, title, detail, userId, recipient_id);
         call.enqueue(new Callback<StoreMemoResponse>() {
             @Override
             public void onResponse(Call<StoreMemoResponse> call, Response<StoreMemoResponse> response) {
-                Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                finish();
+                if (response.isSuccessful()){
+                    Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<StoreMemoResponse> call, Throwable t) {
                 Toast.makeText(AddMemoActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
     }
@@ -192,13 +202,19 @@ public class AddMemoActivity extends AppCompatActivity {
         call.enqueue(new Callback<StoreMemoResponse>() {
             @Override
             public void onResponse(Call<StoreMemoResponse> call, Response<StoreMemoResponse> response) {
-                Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                finish();
+                if (response.isSuccessful()) {
+                    Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(AddMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(retrofit2.Call<StoreMemoResponse> call, Throwable t) {
                 Toast.makeText(AddMemoActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
     }

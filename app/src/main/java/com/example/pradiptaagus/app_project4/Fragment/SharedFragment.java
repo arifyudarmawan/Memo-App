@@ -1,9 +1,12 @@
 package com.example.pradiptaagus.app_project4.Fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -67,6 +70,8 @@ public class SharedFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.activity_shared_memo, container, false);
+
+        dbHelper = new DBHelper(getContext());
 
         // recycler view
         recyclerView = view.findViewById(R.id.my_recycler_view);
@@ -163,6 +168,9 @@ public class SharedFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     recyclerView.setAdapter(adapter);
                 }
                 progressBar.setVisibility(View.GONE);
+
+                deleteAllLocalMemo();
+                storeToLocalDatabase();
             }
 
             @Override
@@ -172,8 +180,67 @@ public class SharedFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
     }
 
-    private void loadFromDatabase() {
+    private void deleteAllLocalMemo() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("memos", null, null);
+    }
 
+    private void storeToLocalDatabase() {
+        // put data into database
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        //create a new map of values, where column name are the keys
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < sharedMemoList.size(); i++) {
+            values.put("id", sharedMemoList.get(i).getId());
+            values.put("title", sharedMemoList.get(i).getTitle());
+            values.put("detail", sharedMemoList.get(i).getDetail());
+            values.put("user_id", sharedMemoList.get(i).getUserId());
+            values.put("created_at", sharedMemoList.get(i).getCreatedAt());
+            values.put("updated_at", sharedMemoList.get(i).getUpdatedAt());
+
+            db.insert("memos", null, values);
+        }
+    }
+
+    private void loadFromDatabase() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                "id",
+                "title",
+                "detail",
+                "user_id",
+                "created_at",
+                "updated_at"
+        };
+
+        Cursor cursor = db.query(
+                "memos",
+                projection,
+                null,
+                null,
+                null,
+                null,
+                "id DESC"
+        );
+
+        while (cursor.moveToNext()) {
+            MemoItemResponse memo = new MemoItemResponse();
+            memo.setId(cursor.getInt(0));
+            memo.setTitle(cursor.getString(1));
+            memo.setDetail(cursor.getString(2));
+            memo.setUserId(cursor.getInt(3));
+            memo.setCreatedAt(cursor.getString(4));
+            memo.setUpdatedAt(cursor.getString(5));
+
+            sharedMemoList.add(memo);
+        }
+        cursor.close();
+        adapter = new MemoAdapter(sharedMemoList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

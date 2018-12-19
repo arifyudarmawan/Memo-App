@@ -1,7 +1,6 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -240,30 +238,30 @@ public class DetailActivity extends AppCompatActivity {
                 finish();
                 return true;
 
-            case R.id.delete:
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setMessage("Are you sure want to delete this memo?");
-                alertDialog.setCancelable(true);
-                alertDialog.setNegativeButton(
-                        "no",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        }
-                );
-                alertDialog.setPositiveButton(
-                        "yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-//                                deleteMemo(memoId);
-                            }
-                        }
-                );
-                alertDialog.create().show();
-                return true;
+//            case R.id.delete:
+//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//                alertDialog.setMessage("Are you sure want to delete this memo?");
+//                alertDialog.setCancelable(true);
+//                alertDialog.setNegativeButton(
+//                        "no",
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // do nothing
+//                            }
+//                        }
+//                );
+//                alertDialog.setPositiveButton(
+//                        "yes",
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+////                                deleteMemo(memoId);
+//                            }
+//                        }
+//                );
+//                alertDialog.create().show();
+//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

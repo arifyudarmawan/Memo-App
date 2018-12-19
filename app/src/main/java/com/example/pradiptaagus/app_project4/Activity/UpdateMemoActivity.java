@@ -1,5 +1,6 @@
 package com.example.pradiptaagus.app_project4.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class UpdateMemoActivity extends AppCompatActivity {
     private SharedPreferences userPreference;
     private ProgressBar progressBar;
     private TextInputLayout layoutMemoTitle, layoutMemoDetail;
-
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +76,12 @@ public class UpdateMemoActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Updating...");
+
         //get memo id from previous activity
         Intent intent = getIntent();
         memoId = intent.getIntExtra("memo_id", 0);
-
-        // get recipient list
-
 
         // get user input
         etMemoTitle = findViewById(R.id.et_memo_title);
@@ -118,6 +119,8 @@ public class UpdateMemoActivity extends AppCompatActivity {
     }
 
     private void updateMemo(String token, final int memoId, int userId) {
+        progressDialog.show();
+
         // get user input
         title = etMemoTitle.getText().toString();
         detail = etMemoDetail.getText().toString();
@@ -127,29 +130,35 @@ public class UpdateMemoActivity extends AppCompatActivity {
         call.enqueue(new Callback<UpdateMemoResponse>() {
             @Override
             public void onResponse(retrofit2.Call<UpdateMemoResponse> call, Response<UpdateMemoResponse> response) {
-                Toast.makeText(UpdateMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    Toast.makeText(UpdateMemoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                // update sqlite
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues contentValues = new ContentValues();
+                    // update sqlite
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    ContentValues contentValues = new ContentValues();
 
-                String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
-                //store data to Contentvalues variable
-                contentValues.put("title", title);
-                contentValues.put("detail", detail);
-                contentValues.put("updated_at", timestamp);
+                    //store data to Contentvalues variable
+                    contentValues.put("title", title);
+                    contentValues.put("detail", detail);
+                    contentValues.put("updated_at", timestamp);
 
-                String args[] = new String[]{Integer.toString(memoId)};
+                    String args[] = new String[]{Integer.toString(memoId)};
 
-                db.update("memos", contentValues, "id=?", args);
+                    db.update("memos", contentValues, "id=?", args);
 
-                finish();
+                    finish();
+                } else {
+                    Toast.makeText(UpdateMemoActivity.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(retrofit2.Call<UpdateMemoResponse> call, Throwable t) {
                 Toast.makeText(UpdateMemoActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
     }

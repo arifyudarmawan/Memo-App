@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.pradiptaagus.app_project4.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    private SharedPreferences userPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

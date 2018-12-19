@@ -173,20 +173,20 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
             }
 
-            //remove item on SQLite
-            private void deleteLocalMemo(int memo_id) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                String selection = "id = ?";
-                String[] selectionArgs = {String.valueOf(memo_id)};
-                db.delete("memos", selection, selectionArgs);
-            }
-
             @Override
             public void onFailure(Call<DeleteMemoResponse> call, Throwable t) {
                 Log.d("Tag", "error", t);
                 Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //remove item on SQLite
+    private void deleteLocalMemo(int memo_id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = "id = ?";
+        String[] selectionArgs = {String.valueOf(memo_id)};
+        db.delete("memos", selection, selectionArgs);
     }
 
     private void showDeleteDialog(final int position, final int memo_id, final String token) {
@@ -216,9 +216,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void init() {
         if (this.isConnected()) {
-            prepareMemoData();
+            loadDataFromServer();
         } else {
-            loadFromDatabase();
+            loadFromLocalDatabase();
         }
     }
 
@@ -231,7 +231,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return status;
     }
 
-    private void prepareMemoData() {
+    private void loadDataFromServer() {
         userPreference = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         userId = userPreference.getInt("userId", 0);
         token = userPreference.getString("token", "missing");
@@ -248,6 +248,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     recyclerView.setAdapter(adapter);
                 }
                 progressBar.setVisibility(View.GONE);
+
+                deleteAllLocalMemo();
+                storeToLocalDatabase();
             }
 
             @Override
@@ -278,7 +281,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             db.insert("memos", null, values);
         }
     }
-    private void loadFromDatabase() {
+    private void loadFromLocalDatabase() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // Define a projection that specifies which columns from the database

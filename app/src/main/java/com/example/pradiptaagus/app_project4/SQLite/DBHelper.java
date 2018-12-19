@@ -1,12 +1,8 @@
 package com.example.pradiptaagus.app_project4.SQLite;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.pradiptaagus.app_project4.Model.MemoItemResponse;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION= 1;
@@ -28,6 +24,15 @@ public class DBHelper extends SQLiteOpenHelper {
         "email TEXT" +
     ")";
 
+    private static final String CREATE_TABLE_SHARED_MEMO = "CREATE TABLE shared_memos(" +
+            "id INTEGER PRIMARY KEY," +
+            "title TEXT," +
+            "detail TEXT," +
+            "user_id INTEGER," +
+            "created_at TEXT," +
+            "updated_at TEXT" +
+    ")";
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -37,6 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_MEMO);
         db.execSQL(CREATE_TABLE_FRIEND);
+        db.execSQL(CREATE_TABLE_SHARED_MEMO);
     }
 
     @Override
